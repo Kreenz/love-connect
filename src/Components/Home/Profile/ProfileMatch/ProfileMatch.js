@@ -49,12 +49,18 @@ const ButtonClose = styled.div`
 const ProfileMatch = (props) => {
     const[imgIndex, setImgIndex] = useState(0);
     const[expand, setExpand] = useState(false);
+
+    const goBack = (screen, oldScreen, setScreen, setOldScreen) => {
+      setOldScreen(screen);
+      setScreen(oldScreen);
+    }
+
     return (
         <Wrapper expand={expand}>
           <PhotoWrapper expand={expand} photo={props.user.photos[imgIndex]} >
             <ImageSlider userPhotos={props.user.photos} setImgIndex={setImgIndex} imgIndex={imgIndex}/>
             <ButtonImgExpander onClick={() => { setExpand(!expand) }}/> 
-            <ButtonClose onClick={() => { props.setScreen("match") }}/> 
+            <ButtonClose onClick={() => { goBack(props.screen, props.oldScreen, props.setScreen, props.setOldScreen) }}/> 
           </PhotoWrapper>
           <ProfileData styles={expand ? "height:30%;" : "height:65%;"} user={props.user} />
         </Wrapper>

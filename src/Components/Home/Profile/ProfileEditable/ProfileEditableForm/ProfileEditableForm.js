@@ -4,10 +4,13 @@ import styled from "styled-components";
 import Input from '../../../../Shared/Formulario/Input';
 import Label from '../../../../Shared/Formulario/Label';
 
+import Nouislider from "nouislider-react";
+import "nouislider/distribute/nouislider.css";
+
 const DivForm = styled.div`
     ${props=>`
         border-radius:1vh;
-        width:17vw;
+        width:43vw;
         height:30vh;
         text-align: center;
         align-items: center;
@@ -19,12 +22,19 @@ const DivForm = styled.div`
 const DivInput = styled.div`
     ${props=>`
         border-radius:1vh;
-        width:95%;
+        width:98%;
         height:10vh;
         display: flex;
         flex-direction: column; 
         align-items: flex-start;
         ${props?.styles}
+`}`;
+
+const WrapperSlider = styled.div`
+  ${props=>`
+      width:10vw;
+      height:2vh;
+      ${props?.styles}
 `}`;
 
 const ProfileEditableForm = (props) => {
@@ -40,7 +50,7 @@ const ProfileEditableForm = (props) => {
            <DivInput>
             <Label valor={element.label}/>
             {console.log(element.styles)}
-            <Input name={element.name} type={element.type} placeholder={element.label} styles={element.styles}/>
+            <Input name={element.name} type={element.type} placeholder={element.label} styles={element.styles} value={element.value}/>
            </DivInput>
            );
         break;
@@ -48,14 +58,30 @@ const ProfileEditableForm = (props) => {
           const options = [];
           element.options.forEach(element2 => {
             console.log(element2);
-            options.push(<option value={element2}>{element2}</option>);
+            /* if(element2 == element.typegen)    options.push(<option value={element2}>{element2}</option>);
+            else  */  options.push(<option value={element2}>{element2}</option>);
           })
           view.push(
             <DivInput>
             <Label valor={element.label}/>
-            <Input name={element.name} type={element.type} options={options} styles={element.styles} noInput/>
+            <Input name={element.name} type={element.type} options={options} styles={element.styles} value={element.value} noInput/>
             </DivInput>
           );
+        break;
+        case "range":
+            /* if(element.name == "distance"){ */
+                view.push(
+                    <DivInput>
+                        <Label valor={element.label}/>
+                        <DivInput styles="flex-direction:row; width:100%">
+                            <WrapperSlider>
+                              <Nouislider step={element.step} range={element.range} start={element.start} connect />
+                            </WrapperSlider>
+                            <Label valor={element.value} styles="margin-left:2vw; width:4vw"/>
+                        </DivInput>
+                    </DivInput>
+                );
+            /* } */
         break;
         default:
         break;

@@ -42,11 +42,11 @@ const Chat = (props) => {
     return (
         <Wrapper>
             <ChatContainer>
-                <MiniProfile user={props.userMatch} setScreen={props.setScreen} setUserMatch={props.setUserMatch}/>
-                <ChatMessages userId={props.user.userId} messages={props.chatMessages}/>
+                <MiniProfile user={props.userMatch} screen={props.screen} setScreen={props.setScreen} setOldScreen={props.setOldScreen} setUserMatch={props.setUserMatch}/>
+                <ChatMessages db={props.db} user={props.user} userMatch={props.userMatch} setChatMessages={props.setChatMessages} chatMessages={props.chatMessages}/>
             </ChatContainer>
             <ChatMessageSenderWrapper>
-                <ChatTextSender userId={props.user.userId} userMatchId={props.userMatch.userId}/>
+                <ChatTextSender db={props.db} userId={props.user.userId} userMatchId={props.userMatch.userId}/>
             </ChatMessageSenderWrapper>
         </Wrapper>
     );

@@ -2,19 +2,21 @@ import React from "react"
 import styled from "styled-components";
 
 const ObjLabel = styled.label`
-  border-radius:5px;
-  width:15vw;
-  height:7vh;
-  text-align: left;
-  align-items: center;
-  color: black;
-  font-size: calc(5px + 2vmin);
-`;
+  ${props=>`
+    border-radius:5px;
+    width:15vw;
+    height:7vh;
+    text-align: left;
+    align-items: center;
+    color: black;
+    font-size: calc(5px + 2vmin);
+    ${props?.styles}
+`}`;
 
 const Label = (props) => {
 
   return (
-    <ObjLabel>
+    <ObjLabel styles={props.styles}>
         {props.valor}
     </ObjLabel>
   );

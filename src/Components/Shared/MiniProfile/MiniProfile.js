@@ -37,16 +37,17 @@ const PersonState = styled.input`
 
 
 const MiniProfile = (props) => {
-    const loadProfile = (user, setUserMatch, setScreen) => {
+    const loadProfile = (user, setUserMatch, setScreen, screen, setOldScreen) => {
       if(setScreen){
         setUserMatch(user);
+        if(setOldScreen) setOldScreen(screen);
         setScreen("profile");
       }
     }
 
     return (
         <Wrapper>
-            <ImgLogo onClick={() => loadProfile(props.user, props.setUserMatch, props.setScreen)} imgFondo={props.user.photos[0]}>
+            <ImgLogo onClick={() => loadProfile(props.user, props.setUserMatch, props.setScreen, props.screen, props.setOldScreen)} imgFondo={props.user.photos[0]}>
 
               <PersonState type="radio"/>
               

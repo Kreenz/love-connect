@@ -13,7 +13,7 @@ const WrapperPerson = styled.div`
 
 const MatchPerson = (props) =>{
 
-    const searchUserMatch = (user, userMatch, setUserMatch, screen, setScreen) => {
+    const searchUserMatch = (user, userMatch, setUserMatch, screen, setScreen, setChatMessages) => {
         //buscas user con la llave userId en la base de datos;
         let newUserMatch = {
             userId: user.userId,
@@ -25,14 +25,17 @@ const MatchPerson = (props) =>{
             photos:user.photos
         }
         if(userMatch.userId === newUserMatch.userId && screen === "chat") setScreen("match");
-        else setScreen("chat");
+        else {
+            setChatMessages([]);
+            setScreen("chat");
+        }
         setUserMatch(newUserMatch);
     }
 
     return(
         <WrapperPerson onClick={() => { 
             //[props.userIndex] es el indice es decir array[i]
-            searchUserMatch(props.userMatchList[props.userIndex], props.userMatch, props.setUserMatch, props.screen, props.setScreen);
+            searchUserMatch(props.userMatchList[props.userIndex], props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages);
             
         }}>
 

@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState} from "react"
 import styled from "styled-components";
 
 import MatchMenu from "./MatchMenu";
 
-import Photo1 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/1.jpeg";
-import Photo2 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/2.jpeg";
-import Photo3 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/3.jpg";
-import Photo4 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/4.jpg";
+
+import Photo1 from "../../../Assets/Images/Profile/ProfilezJTtb6ZwPJDmhPwBIFho/1.jpg";
+import Photo2 from "../../../Assets/Images/Profile/ProfilezJTtb6ZwPJDmhPwBIFho/2.jpg";
+
+import PhotoMarc1 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/1.png";
+import PhotoMarc2 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/2.jpg";
+import PhotoMarc3 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/3.jpg";
+import PhotoMarc4 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/4.jpg";
+
+import PhotoPablo1 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/1.jpeg";
+import PhotoPablo2 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/2.jpeg";
+import PhotoPablo3 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/3.jpg";
+import PhotoPablo4 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/4.jpg";
+import PhotoPablo5 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/5.jpg";
+
 
 const Wrapper = styled.div`
     ${props=>` 
@@ -61,21 +72,56 @@ const MatchProfileImg = styled.div`
 
 const Match = (props) => {
     const[ImgIndex, setImgIndex] = useState(0);
+    const[nextUserMatchList, setNextUserMatchList] = useState([])
 
     useEffect(() => {
-        //buscas el primer usuario que puedas encontrar para el userMatch, userId
-        if(props.userMatch.userId == null){
-          props.setUserMatch({
-            userId: "hE238nlUZVoHsvRDrpQL",
-            username: "Marc Ortiz",
-            age:21,
-            distance:11,
-            recent:null,
-            tastes:[],
-            photos:[Photo1, Photo2, Photo3, Photo4]
-          })
+        if(nextUserMatchList.length === 0){
+          //rellenas la lista con los posibles matches
+          setNextUserMatchList(
+            [
+              {
+                userId:"hE238nlUZVoHsvRDrpQL",
+                username:"Marc Ortiz",
+                active:"",
+                photos: [PhotoMarc1,PhotoMarc2,PhotoMarc3,PhotoMarc4]
+              },
+              {
+                userId:"QR2LzSe7dfLcyAEnuWu4",
+                username:"Pablo Ceballos",
+                active:"",
+                photos: [PhotoPablo1,PhotoPablo2,PhotoPablo3,PhotoPablo4,PhotoPablo5]
+              }
+            ]
+          )
+          
+          if(props.oldScreen === "match" && nextUserMatchList.length === 0) props.setScreen("nousers");
+          else if(props.userMatch.userId === null){
+            //buscas al usuario en la pos 0;
+            //userMatchList[0]
+            props.setNextUserMatch({
+              userId: "zJTtb6ZwPJDmhPwBIFho",
+              username: "Picaso",
+              age:21,
+              distance:11,
+              recent:null,
+              tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
+              photos:[Photo1, Photo2]
+            })
+          }
+
         }
-    });
+      })
+    
+      //recarga la lista de 
+      useEffect(() => {
+        if(nextUserMatchList.length === 0){
+          //reload
+    
+          if(props.oldScreen === "match" && nextUserMatchList.length === 0) props.setScreen("nousers");
+        }
+      }, [nextUserMatchList.length])    
+      
+      
 
     return (
         <Wrapper>
@@ -92,7 +138,10 @@ const Match = (props) => {
                         imgIndex={ImgIndex}
                         setImgIndex={setImgIndex} 
                         setUserMatch={props.setUserMatch}
+                        setNextUserMatch={props.setNextUserMatch}
+                        screen={props.screen}
                         setScreen={props.setScreen}
+                        setOldScreen={props.setOldScreen}
                         />
                 </MatchProfileImg>
             </MatchContainer>

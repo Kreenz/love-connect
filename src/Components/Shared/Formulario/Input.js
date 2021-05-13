@@ -10,7 +10,7 @@ const ObjInput = styled.input`
     align-items: center;
     font-size: calc(5px + 2vmin);
     ${props?.styles}
-`}`
+`}`;
 
 const ObjSelect = styled.select`
   ${props=>`
@@ -21,14 +21,15 @@ const ObjSelect = styled.select`
     align-items: center;
     font-size: calc(5px + 2vmin);
     ${props?.styles}
-`}`
+`}`;
 
 const Input = (props) => {
 
   let view = null;
 
   if(!props.noInput){
-    view = <ObjInput name={props.name} type={props.type} placeholder={props.placeholder} value={props.value} styles={props.styles}/>
+    view = <ObjInput name={props.name} type={props.type} placeholder={props.placeholder} value={props.value} styles={props.styles}
+    min={props.min} max={props.max} step={props.step}/>
   }
   else{
     const options = [];

@@ -76,23 +76,26 @@ const DislikeButton = styled.div`
 
 const MatchMenu = (props) => {
 
-    const matchUser = (userId, userMatchId, setUserMatch) => {
-        nextUser(setUserMatch);
+    const matchUser = (userId, userMatchId, setNextUserMatch) => {
+        nextUser(setNextUserMatch);
     }
 
-    const nextUser = (setUserMatch) => {
+    const nextUser = (setNextUserMatch) => {
+    
     }
 
-    const getUserMatchProfile = (setScreen) => {
+    const getUserInfo = (screen, setScreen, setOldScreen) => {
+        props.setUserMatch(props.userMatch)
+        setOldScreen(screen);
         setScreen("profile");
     }
 
     return (
         <Wrapper>
             <MatchButtonsWrapper>
-                <LikeButton onClick={() => { matchUser(props.user.userId, props.userMatch.userId, props.setUserMatch) }}></LikeButton>
-                <InfoButton onClick={() => { getUserMatchProfile(props.setScreen)}}></InfoButton>
-                <DislikeButton onClick={() => { nextUser(props.setUserMatch)}}></DislikeButton>    
+                <LikeButton onClick={() => { matchUser(props.user.userId, props.nextUserMatch.userId, props.setNextUserMatch) }}></LikeButton>
+                <InfoButton onClick={() => { getUserInfo(props.screen, props.setScreen, props.setOldScreen)}}></InfoButton>
+                <DislikeButton onClick={() => { nextUser(props.setNextUserMatch)}}></DislikeButton>    
             </MatchButtonsWrapper>
             <ImageSlider 
                 userPhotos={props.userMatch.photos}

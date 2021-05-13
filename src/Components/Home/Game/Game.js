@@ -75,7 +75,6 @@ const ChatMessageSenderWrapper = styled.div`
 `}`
 
 const Game = (props) => {
-  
     return (
         <Wrapper>
             <GameContainer>
@@ -124,10 +123,10 @@ const Game = (props) => {
             <Wrapper2>
                 <ChatContainer>
                     <MiniProfile user={props.userMatch}/>
-                    <ChatMessages userId={props.user.userId} messages={props.chatMessages}/>
+                    <ChatMessages db={props.db} user={props.user} userMatch={props.userMatch} setChatMessages={props.setChatMessages} chatMessages={props.chatMessages}/>
                 </ChatContainer>
                 <ChatMessageSenderWrapper>
-                    <ChatTextSender userId={props.user.userId} userMatchId={props.userMatch.userId}/>
+                    <ChatTextSender db={props.db} userId={props.user.userId} userMatchId={props.userMatch.userId}/>
                 </ChatMessageSenderWrapper>
             </Wrapper2>
         </Wrapper>

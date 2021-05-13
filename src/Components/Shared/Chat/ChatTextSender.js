@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components";
+import "firebase/firestore";
 
 const Wrapper = styled.div`
   ${props=>`
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
         ${props?.styles}
 `}`
 
-const MessageArea = styled.textarea`
+const MessageArea = styled.input`
     width: 79%;
     padding: 1%;
     height: 79.5%;
@@ -54,26 +55,65 @@ const ButtonMessageSender = styled.button`
 `
 
 const ChatTextSender = (props) => {
-    const [message, setMessage] =  useState("Escribe aqui tu mensaje...");
+    const [message, setMessage] =  useState("");
 
-    const sendMessage = (message) => {
-        //props.userId;
-        //props.userMatchId;
+    const sendContent = (user1, user2, type, message) => {
+        const messages = props.db.collection("matches").doc(user1 + user2).collection("messages").doc();
+        messages.set(
+        {
+            fecha: new Date().getTime(),
+            id_perfil: props.userId,
+            message: message,
+            type: type
+        })
+    }
+
+    const checkDocument = (userId, userMatchId) => {
+        return new Promise( resolve => {
+            let doc = props.db.collection("matches").doc(userId + userMatchId);
+            doc.get().then( (docSnapshot) => {
+                resolve(docSnapshot.exists);
+            });
+        })
+    }
+
+    const onEnterMessage = (e) => {
+        if(e.key === 'Enter' || e.keyCode === 13){
+            sendMessage(message, "text")
+            setMessage("")
+        } 
+    }
+
+    const sendMessage = (message, type) => {
+
+        let user1 = props.userId;
+        let user2 = props.userMatchId;
+        checkDocument(user1, user2).then(data =>{
+            if(!data) {
+                let aux = "";
+                aux = user1;
+                user1 = user2;
+                user2 = aux;
+                checkDocument(user1, user2).then(data => {
+                    if(data) sendContent(user1, user2, type, message);
+                })
+            } else sendContent(user1, user2, type, message);
+        });
     }
 
     const uploadPhoto = (message) => {
-        sendMessage(message);
+        sendMessage(message, "photo");
     }   
 
     return (
         <Wrapper styles={props.styles}>
-            <MessageArea value={message} onChange={ (e) => { setMessage(e.target.value) }}/>
+            <MessageArea placeholder={"Escribe aqui tu mensaje..."} value={message} onKeyUp={ (e) => { onEnterMessage(e) } } onChange={ (e) => { setMessage(e.target.value) }}/>
             <ButtonMessageWrapper>
                 <ButtonPhotoUploader onClick={() => { uploadPhoto(message)}}>
                     P
                 </ButtonPhotoUploader>
                 <HiddenFileInput type="file"/>
-                <ButtonMessageSender onClick={() => { sendMessage(message)}}>
+                <ButtonMessageSender onClick={() => { sendMessage(message, "text"); setMessage("")}}>
                     ENVIAR
                 </ButtonMessageSender>   
             </ButtonMessageWrapper>
