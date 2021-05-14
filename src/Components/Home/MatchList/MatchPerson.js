@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 
 import MiniProfileWrapper from "../../Shared/MiniProfile/MiniProfileWrapper";
@@ -9,37 +9,66 @@ const WrapperPerson = styled.div`
     margin-left: 1vw;
     margin-top: 2vh;
     margin-bottom: 2vh;
+    cursor:pointer;
 `;
 
 const MatchPerson = (props) =>{
+    const [userMatch, setUserMatch] = useState({
+        userId: null
+    })
 
-    const searchUserMatch = (user, userMatch, setUserMatch, screen, setScreen, setChatMessages) => {
-        //buscas user con la llave userId en la base de datos;
-        let newUserMatch = {
-            userId: user.userId,
-            username: user.username,
-            age: "19",
-            distance: "11",
-            recent: null,
-            tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
-            photos:user.photos
-        }
-        if(userMatch.userId === newUserMatch.userId && screen === "chat") setScreen("match");
+    const searchUserMatch = (userMatchCheck, setUserMatchApp, screen, setScreen, setChatMessages) => {
+        if(userMatchCheck.userId === userMatch.userId && screen === "chat") setScreen("match");
         else {
+            //no se si esto es necesario, necesitamos otro usuario para probarlo bien
             setChatMessages([]);
             setScreen("chat");
         }
-        setUserMatch(newUserMatch);
+        setUserMatchApp(userMatch);
     }
+
+    useEffect(() => {
+        if(!userMatch.userId){
+
+            props.db
+            .collection("perfiles")
+            .doc(props.userMatchId)
+            .get()
+            .then(doc => {
+                let photos = JSON.parse(doc.data().fotos)
+                props.db
+                .collection("perfiles/" + props.userId + "/match_list")
+                .where("id_perfil", "==", props.userMatchId)
+                .get()
+                .then( user => {
+                    user.forEach(docUser => {
+                        setUserMatch({
+                            userId: doc.id,
+                            username: doc.data().nombre,
+                            age:doc.data().edad,
+                            distance:doc.data().distancia,
+                            recent:doc.data().reciente,
+                            id_chat: docUser.data().id_chat,
+                            tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
+                            photos:photos
+                        })
+                    })
+
+                })
+
+            });
+        }
+
+    })
 
     return(
         <WrapperPerson onClick={() => { 
             //[props.userIndex] es el indice es decir array[i]
-            searchUserMatch(props.userMatchList[props.userIndex], props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages);
-            
+            //el primer usermatch es el de la tarjeta, el segundo pos no me acuerdo, algo para ver que salia la pantalla que toca
+            searchUserMatch(props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages);
         }}>
 
-        <MiniProfileWrapper  user={props.user}>
+        <MiniProfileWrapper user={userMatch}>
         </MiniProfileWrapper>
            
         </WrapperPerson>

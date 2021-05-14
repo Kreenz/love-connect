@@ -27,7 +27,6 @@ const Wrapper = styled.div`
 const Home = (props) => {
   const[screen, setScreen] = useState("game");
   const[oldScreen, setOldScreen] = useState("game");
-  const[localitzation, setLocalitzacion] = useState({lat: props.user.lat, long: props.user.long})
   const[chatMessages, setChatMessages] = useState([])
 
   const options = {
@@ -37,7 +36,23 @@ const Home = (props) => {
   }
 
   const getCoords = (pos) => {
-    if(pos.coords.latitue != localitzation?.lat || pos.coords.longitude != localitzation?.long)setLocalitzacion({lat: pos.coords.latitude, long:pos.coords.longitude})
+    console.log("user.localitzation: ", pos.coords.latitude, pos.coords.longitude)
+    if(pos.coords.latitue != props.user.localitzation?.lat || pos.coords.longitude != props.user.localitzation?.long) {
+      props.setUser({
+        loggedIn: props.user.loggedIn,
+        userId: props.user.userId,
+        username: props.user.username,
+        email: props.user.email,
+        age: props.user.age,
+        distance: props.user.distance,
+        recent: props.user.recent,
+        gender:props.user.gender,
+        tastes:props.user.tastes,
+        photos:props.user.photos,
+        localitzation:{lat: pos.coords.latitude, long: pos.coords.longitude}
+      })
+    }
+      
   }
 
   const errCoords = (err) => {
@@ -45,16 +60,9 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(getCoords, errCoords, options);
+    if(!props.user.localitzation) navigator.geolocation.getCurrentPosition(getCoords, errCoords, options);
   })
-
-  useEffect(() => {
-    /*props.db.collection("perfiles/" + props.user.userId).update({
-      posicion: new firebase.firestore.GeoPoint(localitzation.lat, localitzation.long)
-    });*/
-  }, [localitzation])
   
-
   //siguente usuario de la lista, se conserva para poder volver en todo momento a ese usuario sin ningun problema
   const[nextUserMatch, setNextUserMatch] = useState({
     userId: null,
@@ -73,6 +81,7 @@ const Home = (props) => {
     age:null,
     distance:null,
     recent:null,
+    id_chat:null,
     tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
     photos:[PhotoLogo, "", "", ""]
   })

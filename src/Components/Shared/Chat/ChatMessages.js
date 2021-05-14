@@ -53,40 +53,6 @@ const ChatMessages = (props) => {
     const [resize, setResize] = useState({messageId:"", expand: false});
     let messagesEnd = "";
 
-    const fetchMessages = (user1, user2) => {
-        const chatMessages = props.chatMessages;
-
-        const messages = props.db.collection("matches").doc(user1 + user2).collection("messages").orderBy("fecha", "asc");
-        messages.onSnapshot((snapshot => {
-            let history = [];
-            snapshot.forEach( doc => {
-                let date = doc.data().fecha;
-                if(date === "") date = new Date().getTime();
-                history.push(
-                    {
-                        messageId:doc.id,
-                        fecha:date,
-                        userId:doc.data().id_perfil,
-                        message:doc.data().message,
-                        type:doc.data().type
-                    },
-                )
-            })
-            let chatLenght = (chatMessages) ? chatMessages.length : 0;
-            console.log(history.length, chatLenght);
-            if(history.length !== chatLenght) props.setChatMessages(history);
-        }))
-    }
-
-    const checkDocument = (userId, userMatchId) => {
-        return new Promise( resolve => {
-            let doc = props.db.collection("matches").doc(userId + userMatchId);
-            doc.get().then( (docSnapshot) => {
-                resolve(docSnapshot.exists);
-            });
-        })
-    }
-
     const generateResponse = (type, message, messageId, resize, setResize) => {
         if(type === "game") {
             //cargas juego del message
@@ -99,41 +65,44 @@ const ChatMessages = (props) => {
     }
 
     useEffect(() => {
+        if(props.db && props.userMatch.id_chat){
+            const unsubscribe = props.db
+                .collection("matches")
+                .doc(props.userMatch.id_chat)
+                .collection("messages")
+                .orderBy("fecha", "asc")
+                .onSnapshot(snapshot => {
+                    const data = snapshot.docs.map(doc => ({
+                        ...doc.data(),
+                        id:doc.id
+                    }));
 
-        let user1 = props.user.userId;
-        let user2 = props.userMatch.userId;
-        checkDocument(user1, user2).then(data => {
-            if(!data) {
-                let aux = "";
-                aux = user1;
-                user1 = user2;
-                user2 = aux;
+                    props.setChatMessages(data);
+                    
+                });
+            
+            return unsubscribe;
+        }
 
-                checkDocument(user1, user2).then(data => {
-                    if(data){
-                        fetchMessages(user1, user2);
-                    }
-                })
-            } else {
-                fetchMessages(user1, user2);
-            }
-        });
-        messagesEnd.scrollIntoView({ behavior: "smooth" });
-    }) 
+    }, [props.db]) 
+
+    useEffect(() => {
+        messagesEnd.scrollIntoView({ behavior: "smooth" })
+    }, [props.chatMessages]);
 
     return (
         <Wrapper styles={props.styles}>
             { props.chatMessages && props.chatMessages.map(message=>{
                 return(
-                    <MessageWrapper messageUserId={message.userId} userId={props.user.userId}>
+                    <MessageWrapper messageUserId={message.id_perfil} userId={props.user.userId}>
                         <Message 
                             resize={resize}
                             message={message.message}
-                            messageId={message.messageId} 
+                            messageId={message.id} 
                             type={message.type} 
-                            messageUserId={message.userId} 
+                            messageUserId={message.id_perfil} 
                             userId={props.user.userId}
-                            onClick={() => { generateResponse(message.type, message.message, message.messageId, resize, setResize) }}>
+                            onClick={() => { generateResponse(message.type, message.message, message.id, resize, setResize) }}>
                             {(message.type === "text") ? message.message : (message.type === "game") ? "HA SOLICITADO JUGAR A: " : ""}
                         </Message>
                         

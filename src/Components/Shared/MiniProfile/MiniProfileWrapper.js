@@ -15,7 +15,7 @@ const ImgLogo = styled.div`
 
 const MiniProfileWrapper = (props) =>{
     return(
-        <ImgLogo imgFondo={props.user.photos[0]}>
+        <ImgLogo imgFondo={props.user?.photos?.[0] }>
         </ImgLogo>
     );
 }

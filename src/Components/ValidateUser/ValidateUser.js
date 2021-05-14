@@ -29,10 +29,6 @@ const ValidateUser = (props) => {
     const[state,setState] = useState("");
 
     useEffect(() => {
-        setTimeout(() => {
-            if(state != "") setState("");
-        }, 3000);
-
     }, [state])
 
     return (

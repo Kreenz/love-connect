@@ -82,7 +82,7 @@ const Login = (props) => {
                           gender:doc.data().genero,
                           tastes:[],
                           photos:photos,
-                          localitzation:{lat:doc.data()._lat, long:doc.data()._long}
+                          localitzation:null
                         })
                         
                       })

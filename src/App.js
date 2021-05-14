@@ -37,9 +37,9 @@ function App() {
     gender:"chico",
     tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
     photos:[PhotoLogo],
-    localitzation:{lat:41.570248, long:1.997183}
+    localitzation:null
   });
-  
+
   return (
       <div>
         {user.loggedIn ?  <Home db={db} user={user} setUser={setUser}/>: <ValidateUser db={db} user={user} setUser={setUser} />}

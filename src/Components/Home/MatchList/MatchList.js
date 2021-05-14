@@ -28,87 +28,42 @@ const WrapperMatches = styled.div`
 const MatchList = (props) => {
     const[searchText, setSearchText] = useState("");
     const[userMatchList, setUserMatchList] = useState([]);
-    let i = -1;
 
     useEffect(() => {
-        if(userMatchList.length === 0){
-            const currentUserMatchList = props.userMatchList;
-            //busca matches
+        if(props.db) {
             const userId = props.user.userId;
-            const matchList = props.db.collection("perfiles/" + userId + "/match_list").where("match", "==", true);
-            matchList.onSnapshot((snapshot => {
-                let newUserMatchList = [];
-                let size = 0;
-                snapshot.forEach(user => {
-                    console.log("hola???")
-                    const userMatch = props.db.collection("perfiles").doc(user.data().id_perfil);
-                    size++;
-                    userMatch.get().then((doc) => {
-                        let photos = JSON.parse(doc.data().fotos);
-                        console.log(photos)
-                        newUserMatchList.push(
-                            {
-                                userId:doc.id,
-                                username:doc.data().nombre,
-                                active: doc.data().reciente,
-                                photos: photos
-                            }
-                        )
+            const unsubscribe = props.db
+                .collection("perfiles/" + userId + "/match_list")
+                .where("match", "==", true)
+                .onSnapshot((snapshot => {
+                    const data = snapshot.docs.map((doc) => ({
+                        ...doc.data(),
+                        id:doc.id
+                    }))
 
-                        if(snapshot.size === size) {
-                            let history = currentUserMatchList ? currentUserMatchList.length: 0;
-                            if(newUserMatchList.length != history) setUserMatchList(newUserMatchList);
-                        }
-                    })
-                })
+                    setUserMatchList(data);
             }))
+
+            return unsubscribe;
         }
-    })
-
-    const loadUserMatchesList = () => {
-        return new Promise (resolve => {
-
-        })
-    }
-
-    const loadMatches = (userMatchList, userMatch, setUserMatch, screen, setScreen, setChatMessages) => {
-        let components = [];
-        for(let i = 0; i < userMatchList.length; i++){
-            if(userMatchList[i].username.toLowerCase().includes(searchText.toLowerCase())){
-                components.push(
-                    <MatchPerson 
-                        user={userMatchList[i]} 
-                        userMatch={userMatch}
-                        setUserMatch={setUserMatch}
-                        userMatchList={userMatchList}
-                        userIndex = {i}
-                        setScreen={setScreen}
-                        setChatMessages={setChatMessages}
-                        screen={screen}
-                    />             
-                )
-            }
-        }
-
-        return components; 
-    }
+    }, [props.db])
 
     return (
         <Wrapper>
             <MiniProfile user={props.user} setScreen={props.setScreen} setUserMatch={props.setUserMatch}/>
-            <MatchSearcher setSearchText={setSearchText} setUserMatchList={setUserMatchList}/>
+            <MatchSearcher setSearchText={setSearchText}/>
             <WrapperMatches>
             { 
             userMatchList && userMatchList.map(userMatch =>{
-                i++;
                 return(
                     <MatchPerson 
-                        user={userMatch} 
+                        db={props.db}
+                        userId={props.user.userId} 
+                        userMatchId={userMatch.id_perfil}
                         userMatch={props.userMatch}
                         setUserMatch={props.setUserMatch}
-                        userMatchList={userMatchList}
-                        userIndex = {i}
                         setScreen={props.setScreen}
+                        searchText={searchText}
                         setChatMessages={props.setChatMessages}
                         screen={props.screen}
                     />   
