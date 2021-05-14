@@ -34,7 +34,7 @@ const ImageSlider = (props) => {
 
     const loadImagesPreview = (photos, setImgIndex, imgIndex) => {
         let views = [];
-        for(let i = 0; i < photos.length; i++){
+        for(let i = 0; i < photos?.length; i++){
             views.push(
                 <ImageShow imgIndex={imgIndex} currentIndex={i} styles={"width:" + 18/photos.length + "vw; max-width:5vw; min-widht: 2vw;"} onClick={() => {setImgIndex(i)} } />
             )

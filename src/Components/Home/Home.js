@@ -25,8 +25,8 @@ const Wrapper = styled.div`
 `}`
 
 const Home = (props) => {
-  const[screen, setScreen] = useState("game");
-  const[oldScreen, setOldScreen] = useState("game");
+  const[screen, setScreen] = useState("match");
+  const[oldScreen, setOldScreen] = useState("match");
   const[chatMessages, setChatMessages] = useState([])
 
   const options = {
@@ -50,6 +50,13 @@ const Home = (props) => {
         tastes:props.user.tastes,
         photos:props.user.photos,
         localitzation:{lat: pos.coords.latitude, long: pos.coords.longitude}
+      })
+
+      props.db
+      .collection("perfiles")
+      .doc(props.user.userId)
+      .update({
+        posicion: new firebase.firestore.GeoPoint(pos.coords.latitude, pos.coords.longitude)
       })
     }
       
@@ -92,13 +99,13 @@ const Home = (props) => {
     let component = "";
     switch(screen){
       case "match":
-          component = <Match userMatch={nextUserMatch} setUserMatch={setUserMatch} setNextUserMatch={setNextUserMatch} user={props.user} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen}/>
+          component = <Match db={props.db} userMatch={nextUserMatch} setUserMatch={setUserMatch} setNextUserMatch={setNextUserMatch} user={props.user} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen}/>
           break;
       case "chat":
           component = <Chat db={props.db} setChatMessages={setChatMessages} chatMessages={chatMessages} userMatch={userMatch} setUserMatch={setUserMatch} user={props.user} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen}/>
           break;
       case "profile":
-          component = <Profile screen={screen} setScreen={setScreen} editable={userMatch.userId === props.user.userId} user={userMatch} oldScreen={oldScreen} setOldScreen={setOldScreen}/>
+          component = <Profile db={props.db} screen={screen} setScreen={setScreen} editable={userMatch.userId === props.user.userId} user={userMatch} oldScreen={oldScreen} setOldScreen={setOldScreen} />
           break;
       case "game":
           component = <Game db={props.db} setChatMessages={setChatMessages} chatMessages={chatMessages} userMatch={userMatch} user={props.user}/>

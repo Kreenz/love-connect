@@ -82,7 +82,9 @@ const Login = (props) => {
                           gender:doc.data().genero,
                           tastes:[],
                           photos:photos,
-                          localitzation:null
+                          localitzation:null,
+                          upper_age_range:2,
+                          lower_age_range:2
                         })
                         
                       })

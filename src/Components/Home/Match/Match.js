@@ -1,23 +1,9 @@
 import React, { useEffect, useState} from "react"
 import styled from "styled-components";
+import firebase from 'firebase';
+import "firebase/firestore";
 
 import MatchMenu from "./MatchMenu";
-
-
-import Photo1 from "../../../Assets/Images/Profile/ProfilezJTtb6ZwPJDmhPwBIFho/1.jpg";
-import Photo2 from "../../../Assets/Images/Profile/ProfilezJTtb6ZwPJDmhPwBIFho/2.jpg";
-
-import PhotoMarc1 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/1.png";
-import PhotoMarc2 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/2.jpg";
-import PhotoMarc3 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/3.jpg";
-import PhotoMarc4 from "../../../Assets/Images/Profile/ProfilehE238nlUZVoHsvRDrpQL/4.jpg";
-
-import PhotoPablo1 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/1.jpeg";
-import PhotoPablo2 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/2.jpeg";
-import PhotoPablo3 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/3.jpg";
-import PhotoPablo4 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/4.jpg";
-import PhotoPablo5 from "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/5.jpg";
-
 
 const Wrapper = styled.div`
     ${props=>` 
@@ -72,54 +58,96 @@ const MatchProfileImg = styled.div`
 
 const Match = (props) => {
     const[ImgIndex, setImgIndex] = useState(0);
-    const[nextUserMatchList, setNextUserMatchList] = useState([])
+    const[nextUserMatchList, setNextUserMatchList] = useState([
+      {
+        userId: "",
+        username: "",
+        age:0,
+        distance:0,
+        recent:"",
+        tastes:[],
+        photos:["","",""]
+      },
+      {
+        userId: "",
+        username: "",
+        age:0,
+        distance:0,
+        recent:"",
+        tastes:[],
+        photos:["","",""]
+      }
+    ])
+
+    console.log(nextUserMatchList)
+    
+    const Deg2Rad = (deg) => {
+      return deg * Math.PI / 180;
+    }
+
+    const PythagorasEquirectangular = (lat1, lon1, lat2, lon2) => {
+      lat1 = Deg2Rad(lat1);
+      lat2 = Deg2Rad(lat2);
+      lon1 = Deg2Rad(lon1);
+      lon2 = Deg2Rad(lon2);
+      var R = 6371; // radius of earth
+      var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+      var y = (lat2 - lat1);
+      var d = Math.sqrt(x * x + y * y) * R;
+      return d;
+    }
 
     useEffect(() => {
-        if(nextUserMatchList.length === 0){
-          //rellenas la lista con los posibles matches
-          setNextUserMatchList(
-            [
-              {
-                userId:"hE238nlUZVoHsvRDrpQL",
-                username:"Marc Ortiz",
-                active:"",
-                photos: [PhotoMarc1,PhotoMarc2,PhotoMarc3,PhotoMarc4]
-              },
-              {
-                userId:"QR2LzSe7dfLcyAEnuWu4",
-                username:"Pablo Ceballos",
-                active:"",
-                photos: [PhotoPablo1,PhotoPablo2,PhotoPablo3,PhotoPablo4,PhotoPablo5]
-              }
-            ]
-          )
-          
-          if(props.oldScreen === "match" && nextUserMatchList.length === 0) props.setScreen("nousers");
-          else if(props.userMatch.userId === null){
-            //buscas al usuario en la pos 0;
-            //userMatchList[0]
-            props.setNextUserMatch({
-              userId: "zJTtb6ZwPJDmhPwBIFho",
-              username: "Picaso",
-              age:21,
-              distance:11,
-              recent:null,
-              tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
-              photos:[Photo1, Photo2]
-            })
-          }
+      if(nextUserMatchList.length === 0 && props.user.localitzation){
 
-        }
-      })
-    
-      //recarga la lista de 
-      useEffect(() => {
-        if(nextUserMatchList.length === 0){
-          //reload
-    
-          if(props.oldScreen === "match" && nextUserMatchList.length === 0) props.setScreen("nousers");
-        }
-      }, [nextUserMatchList.length])    
+        setNextUserMatchList({user:"hola"},{user:"hola2"})
+        const appUser = props.user;
+        props.db
+        .collection("perfiles")
+        .where(firebase.firestore.FieldPath.documentId(), "!=", appUser.userId)
+        .get()
+        .then(snapshot => {
+          let users = [];
+          let size = 0;
+          snapshot.forEach(user => {
+            size++;
+            let userDistance = PythagorasEquirectangular(user.data().posicion._lat, user.data().posicion._long, appUser.localitzation.lat, appUser.localitzation.long);
+            if(appUser.distance >= userDistance && user.data().distancia >= userDistance) {
+              //falta comprobar rango edad y que busca
+              let photos = JSON.parse(user.data().fotos);
+              
+              users.push({
+                userId: user.id,
+                username: user.data().nombre,
+                age:user.data().edad,
+                distance:user.data().distancia,
+                recent:user.data().reciente,
+                tastes:[],
+                photos:photos
+              })
+            }
+            //ultimo de la lista, se tiene que optimizar esta mal hecho
+            if(size === snapshot.size){
+              //rellenas la lista con los posibles matches
+              setNextUserMatchList([{
+                user:"eres puto"
+              }]);
+              console.log(nextUserMatchList)
+              if(props.userMatch.userId === null){
+                //buscas al usuario en la pos 0;
+                //
+                console.log(nextUserMatchList[0])
+                props.setNextUserMatch(nextUserMatchList[0]);
+              }
+            }
+          })
+        })
+
+        
+        //if(props.oldScreen === "match" && nextUserMatchList.length === 0) props.setScreen("nousers");
+
+      }
+    }, [nextUserMatchList.length, props.user.localitzation])    
       
       
 
@@ -128,9 +156,9 @@ const Match = (props) => {
             <MatchContainer>
                 <MatchProfileImg userImage={props.userMatch?.photos[ImgIndex]}>
                     <InfoWrapper>
-                        <InfoData>{props.userMatch.username}</InfoData>
-                        <InfoData>{props.userMatch.age} años</InfoData>
-                        <InfoData>{props.userMatch.distance} km</InfoData>
+                        <InfoData>{props.userMatch?.username}</InfoData>
+                        <InfoData>{props.userMatch?.age} años</InfoData>
+                        <InfoData>{props.userMatch?.distance} km</InfoData>
                     </InfoWrapper>
                     <MatchMenu 
                         userMatch={props.userMatch} 

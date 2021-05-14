@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 const Profile = (props) => {
   return (
     <Wrapper>
-        {!props.editable ? <ProfileMatch screen={props.screen} setScreen={props.setScreen} oldScreen={props.oldScreen} setOldScreen={props.setOldScreen} user={props.user} /> :<ProfileEditable user={props.user} />}
+        {!props.editable ? <ProfileMatch screen={props.screen} setScreen={props.setScreen} oldScreen={props.oldScreen} setOldScreen={props.setOldScreen} user={props.user} /> :<ProfileEditable user={props.user} db={props.db}/>}
         {props.editable ? <ProfileEditableAdvancedSettings user={props.user}/> : null}
     </Wrapper>
   );

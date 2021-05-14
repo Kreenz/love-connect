@@ -98,7 +98,7 @@ const MatchMenu = (props) => {
                 <DislikeButton onClick={() => { nextUser(props.setNextUserMatch)}}></DislikeButton>    
             </MatchButtonsWrapper>
             <ImageSlider 
-                userPhotos={props.userMatch.photos}
+                userPhotos={props.userMatch?.photos}
                 imgIndex={props.imgIndex}
                 setImgIndex={props.setImgIndex}
                 />

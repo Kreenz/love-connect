@@ -118,8 +118,13 @@ const ProfileEditable = (props) => {
     })
 
     useEffect(() => {
+        console.log(props);
+        //console.log(props.db.collection("perfiles"));
         //buscas en la base de datos el usuario en base al userId que te pasan por los props
-        let currentUser = {
+        /* if(props.db.collection("perfiles").where("uid", "==", props.user.uid)){
+            console.log(props.user.uid)
+        } */
+        /* let currentUser = {
             userId: "QR2LzSe7dfLcyAEnuWu4",
             username: "Pablo",
             description: "Me gusta ser un chico otaku",
@@ -142,8 +147,8 @@ const ProfileEditable = (props) => {
             photos:["", "", "", ""],
             upper_age_range:2,
             lower_age_range:2
-        }
-        if(profileUser.userId == null) setProfileUser(currentUser);
+        } */
+        if(profileUser.userId == null) setProfileUser(props.user);
     });
 
     const loadPhotos = (props) => {
@@ -158,7 +163,7 @@ const ProfileEditable = (props) => {
         }
         components.push(
             <WrapperPhotosEdit>
-                <ProfileEditablePhotoButton/>
+                <ProfileEditablePhotoButton user={props.user} db={props.db}/>
             </WrapperPhotosEdit>
                
         );
