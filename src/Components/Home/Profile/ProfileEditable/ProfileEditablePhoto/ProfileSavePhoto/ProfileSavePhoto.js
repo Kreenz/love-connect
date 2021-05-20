@@ -63,8 +63,8 @@ export default function ModalEmpresa(props) {
         <aside id="modal" className="modal">
             <div className="content-modal">
                 <header>
-                    <input type="file" name="imagen" onChange={/*changeImagen*/} />
-                    <button onClick={/*uploadImage*/} >GUARDAR</button>
+                    <input type="file" name="imagen"/>
+                    <button >GUARDAR</button>
                 </header>
             </div>
         </aside>
