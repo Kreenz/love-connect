@@ -8,22 +8,25 @@ import ProfileEditableAdvancedSettings from "./ProfileEditable/ProfileEditableAd
 const Wrapper = styled.div`
   background:white;
   color:white;
-  width:100%;
+  width:80%;
   height:100%;
   align-items: center;
   justify-content:center;
   display: flex;
   flex-direction: row;
+  background-color: #9eabe4;
+  background-image: linear-gradient(315deg,#9eabe4 0%,#77eed8 74%);
 `;
 
 
 
-
 const Profile = (props) => {
+console.log(props);
+
   return (
     <Wrapper>
-        {!props.editable ? <ProfileMatch screen={props.screen} setScreen={props.setScreen} oldScreen={props.oldScreen} setOldScreen={props.setOldScreen} user={props.user} /> :<ProfileEditable user={props.user} db={props.db}/>}
-        {props.editable ? <ProfileEditableAdvancedSettings user={props.user}/> : null}
+        {!props.editable ? <ProfileMatch userMatch={props.userMatch} screen={props.screen} setScreen={props.setScreen} oldScreen={props.oldScreen} setOldScreen={props.setOldScreen} user={props.user} setUser={props.setUser}/> :<ProfileEditable user={props.user} db={props.db} setUser={props.setUser}/>}
+        {props.editable ? <ProfileEditableAdvancedSettings user={props.user} db={props.db} setUser={props.setUser}/> : null}
     </Wrapper>
   );
 };

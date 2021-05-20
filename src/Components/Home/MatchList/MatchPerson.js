@@ -20,46 +20,95 @@ const MatchPerson = (props) =>{
     const searchUserMatch = (userMatchCheck, setUserMatchApp, screen, setScreen, setChatMessages) => {
         if(userMatchCheck.userId === userMatch.userId && screen === "chat") setScreen("match");
         else {
-            //no se si esto es necesario, necesitamos otro usuario para probarlo bien
-            setChatMessages([]);
-            setScreen("chat");
-        }
-        setUserMatchApp(userMatch);
-    }
-
-    useEffect(() => {
-        if(!userMatch.userId){
-
             props.db
             .collection("perfiles")
             .doc(props.userMatchId)
             .get()
             .then(doc => {
-                let photos = JSON.parse(doc.data().fotos)
+                //Lo mismo que en home
+                //let photos = JSON.parse(doc.data().fotos);
+                let photos = ["", ""]
                 props.db
                 .collection("perfiles/" + props.userId + "/match_list")
                 .where("id_perfil", "==", props.userMatchId)
                 .get()
                 .then( user => {
                     user.forEach(docUser => {
-                        setUserMatch({
+                        
+                        let userMatch = {
                             userId: doc.id,
                             username: doc.data().nombre,
+                            email:doc.data().correo,
                             age:doc.data().edad,
                             distance:doc.data().distancia,
                             recent:doc.data().reciente,
+                            gender:doc.data().genero,
+                            lookingFor: doc.data().busca,
                             id_chat: docUser.data().id_chat,
-                            tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
-                            photos:photos
-                        })
+                            tastes:[],
+                            photos:photos,
+                            localitzation:{lat: doc.data().posicion._lat, long: doc.data().posicion._long},
+                            upper_age_range:doc.data().rango_edad_mayor,
+                            lower_age_range:doc.data().rango_edad_menor,
+                            description: doc.data().descripcion
+                        }
+
+                        setUserMatch(userMatch)
+                        props.setUserMatch(userMatch)
+
+                        setScreen("chat");
                     })
-
                 })
-
             });
         }
 
-    })
+        setUserMatchApp(userMatch);
+    }
+
+    useEffect(() => {
+
+        //aqui hay que poner que carge la imagen por primera vez cuz esta hecho asi antes
+        props.db
+            .collection("perfiles")
+            .doc(props.userMatchId)
+            .get()
+            .then(doc => {
+                //Lo mismo que en home
+                //let photos = JSON.parse(doc.data().fotos);
+                let photos = ["", ""];
+                props.db
+                .collection("perfiles/" + props.userId + "/match_list")
+                .where("id_perfil", "==", props.userMatchId)
+                .get()
+                .then( user => {
+                    user.forEach(docUser => {
+                        
+                        let userMatch = {
+                            userId: doc.id,
+                            username: doc.data().nombre,
+                            email:doc.data().correo,
+                            age:doc.data().edad,
+                            distance:doc.data().distancia,
+                            recent:doc.data().reciente,
+                            gender:doc.data().genero,
+                            lookingFor: doc.data().busca,
+                            id_chat: docUser.data().id_chat,
+                            tastes:[],
+                            photos:photos,
+                            localitzation:{lat: doc.data().posicion._lat, long: doc.data().posicion._long},
+                            upper_age_range:doc.data().rango_edad_mayor,
+                            lower_age_range:doc.data().rango_edad_menor,
+                            description: doc.data().descripcion
+                        }
+
+                        setUserMatch(userMatch)
+                        props.setUserMatch(userMatch)
+
+                    })
+                })
+            });
+
+    }, [])
 
     return(
         <WrapperPerson onClick={() => { 

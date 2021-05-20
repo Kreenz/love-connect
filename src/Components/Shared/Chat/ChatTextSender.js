@@ -11,7 +11,7 @@ const Wrapper = styled.div`
         font-size: 2.5vh;
         width:98%;
         height:100%;
-        background: black;
+        background-color: #14557b;
         text-align: center;
         align-items: center;
         margin:1%;
@@ -21,10 +21,12 @@ const Wrapper = styled.div`
 const MessageArea = styled.input`
     width: 79%;
     padding: 1%;
-    height: 79.5%;
+    height: 50%;
     max-height:5.2vh;
+    font-size:2vh;
     border:none;
     background: white;
+    border-radius:0.3vh;
 `
 
 const ButtonMessageWrapper = styled.div`
@@ -35,12 +37,21 @@ const ButtonMessageWrapper = styled.div`
     width:19%;
     height:100%;
 `
+
 const ButtonPhotoUploader = styled.button`
-    width: 15%;
+    width: 45%;
     height: 50%;
     border:none;
     cursor:pointer;
     margin-right:2%;
+    color: white;
+    border:none;
+    cursor:pointer;
+    background-color #20bf55;
+    background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
+    transition: box-shadow 0.2s ease-in;
+    border-radius:0.3vh;
+    font-size:1.6vh;
 `
 
 const HiddenFileInput = styled.input`
@@ -48,32 +59,49 @@ const HiddenFileInput = styled.input`
 `
 
 const ButtonMessageSender = styled.button`
-    width: 75%;
+    width: 100%;
     height: 50%;
     border:none;
     cursor:pointer;
+    color: white;
+    border:none;
+    cursor:pointer;
+    background-color #20bf55;
+    background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
+    transition: box-shadow 0.2s ease-in;
+    border-radius:0.3vh;
+    font-size:1.6vh;
+    margin-right:1vh;
+`
+
+const HoverWrapper = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:50%;
+    height:100%;
+    &:hover ${ButtonMessageSender} {
+        box-shadow 0 0 2vh #01baef;
+        text-shadow: 0 0 0.3vh white;
+    };
+
+    &:hover ${ButtonPhotoUploader} {
+        box-shadow 0 0 2vh #01baef;
+        text-shadow: 0 0 0.3vh white;
+    }
 `
 
 const ChatTextSender = (props) => {
     const [message, setMessage] =  useState("");
 
-    const sendContent = (user1, user2, type, message) => {
-        const messages = props.db.collection("matches").doc(user1 + user2).collection("messages").doc();
+    const sendMessage = (message, type) => {
+        const messages = props.db.collection("matches/" + props.userMatch.id_chat + "/messages").doc();
         messages.set(
         {
             fecha: new Date().getTime(),
             id_perfil: props.userId,
             message: message,
             type: type
-        })
-    }
-
-    const checkDocument = (userId, userMatchId) => {
-        return new Promise( resolve => {
-            let doc = props.db.collection("matches").doc(userId + userMatchId);
-            doc.get().then( (docSnapshot) => {
-                resolve(docSnapshot.exists);
-            });
         })
     }
 
@@ -84,23 +112,11 @@ const ChatTextSender = (props) => {
         } 
     }
 
-    const sendMessage = (message, type) => {
+    const loadGameSlider = () => {
 
-        let user1 = props.userId;
-        let user2 = props.userMatchId;
-        checkDocument(user1, user2).then(data =>{
-            if(!data) {
-                let aux = "";
-                aux = user1;
-                user1 = user2;
-                user2 = aux;
-                checkDocument(user1, user2).then(data => {
-                    if(data) sendContent(user1, user2, type, message);
-                })
-            } else sendContent(user1, user2, type, message);
-        });
     }
 
+    /* Algo a hacer */
     const uploadPhoto = (message) => {
         sendMessage(message, "photo");
     }   
@@ -109,13 +125,19 @@ const ChatTextSender = (props) => {
         <Wrapper styles={props.styles}>
             <MessageArea placeholder={"Escribe aqui tu mensaje..."} value={message} onKeyUp={ (e) => { onEnterMessage(e) } } onChange={ (e) => { setMessage(e.target.value) }}/>
             <ButtonMessageWrapper>
-                <ButtonPhotoUploader onClick={() => { uploadPhoto(message)}}>
-                    P
-                </ButtonPhotoUploader>
+                <HoverWrapper>
+                    <ButtonPhotoUploader onClick={() => {props.setShowSlider(!props.showSlider)}}>
+                        J
+                    </ButtonPhotoUploader>
+                </HoverWrapper>
+
                 <HiddenFileInput type="file"/>
-                <ButtonMessageSender onClick={() => { sendMessage(message, "text"); setMessage("")}}>
-                    ENVIAR
-                </ButtonMessageSender>   
+                <HoverWrapper>
+                    <ButtonMessageSender onClick={() => { sendMessage(message, "text"); setMessage("")}}>
+                        ENVIAR
+                    </ButtonMessageSender>   
+                </HoverWrapper>
+
             </ButtonMessageWrapper>
         </Wrapper>
     );

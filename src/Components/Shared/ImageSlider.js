@@ -26,7 +26,7 @@ const ImageShow = styled.div`
         margin-bottom:0.3vh;
         cursor:pointer;
         border:0.1vh solid white;
-        background-color: ${(props.imgIndex === props.currentIndex) ? "#2B2D2F" : "#eee"};
+        background-color: ${(props.imgIndex === props.currentIndex) ? "#42fdc7" : "#eee"};
         ${props?.styles}
 `}`
 
@@ -36,7 +36,7 @@ const ImageSlider = (props) => {
         let views = [];
         for(let i = 0; i < photos?.length; i++){
             views.push(
-                <ImageShow imgIndex={imgIndex} currentIndex={i} styles={"width:" + 18/photos.length + "vw; max-width:5vw; min-widht: 2vw;"} onClick={() => {setImgIndex(i)} } />
+                <ImageShow imgIndex={imgIndex} currentIndex={i} styles={"width:" + 18/photos?.length + "vw; max-width:5vw; min-widht: 2vw;"} onClick={() => {setImgIndex(i)} } />
             )
         }
 

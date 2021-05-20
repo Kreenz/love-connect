@@ -8,9 +8,10 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
     font-size: 2.5vh;
-    background: green;
+    background-color: #70b2d9;
+    background-image: linear-gradient(315deg,#70b2d9 0%,#39e5b6 74%);
     height: 8.5%;
-    width: 25vw;
+    width: 100%;
     text-align: center;
     align-items: center;
     ${props?.styles}

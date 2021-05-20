@@ -12,10 +12,10 @@ align-self: center;
 const ProfieEditablePhotoButton = (props) => {
 
 
-
+console.log(props)
 return (
     <Wrapper>
-        <ProfileSavePhoto user={props.user} db={props.db}/>
+        <ProfileSavePhoto user={props.user} db={props.db} setUser={props.setUser}/>
     </Wrapper>
 )
 

@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import firebase from 'firebase';
 import "firebase/firestore";
 
 import './App.css';
 import Home from './Components/Home/Home';
-//import Register from './Components/Register/Register';
-//import Login from './Components/Login/Login';
 import ValidateUser from './Components/ValidateUser/ValidateUser';
 import PhotoLogo from "./Assets/Images/profileIcon.jpg";
-
 
 var firebaseConfig = {
   apiKey: "AIzaSyC42VNzf1WChOi8Z9odO-XBBG1TpldmsZY",
@@ -25,6 +23,11 @@ firebase.analytics();
 firebase.database();
 const db = firebase.firestore();
 
+const AppFont = styled.div`
+width:100vw;
+height:100vh;
+`
+
 function App() {
   const[user, setUser] = useState({
     loggedIn: false,
@@ -35,15 +38,25 @@ function App() {
     distance:11,
     recent:null,
     gender:"chico",
+    lookingFor: "",
     tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
     photos:[PhotoLogo],
-    localitzation:null
+    localitzation:null,
+    upper_age_range:2,
+    lower_age_range:2,
+    description: ""
   });
 
+  useEffect(() => {
+    if(localStorage.getItem("token") && !user.loggedIn){
+      setUser(JSON.parse(localStorage.getItem("token")))
+    } 
+  })
+
   return (
-      <div>
-        {user.loggedIn ?  <Home db={db} user={user} setUser={setUser}/>: <ValidateUser db={db} user={user} setUser={setUser} />}
-      </div>
+      <AppFont>
+        {user?.loggedIn ?  <Home db={db} user={user} setUser={setUser}/>: <ValidateUser db={db} user={user} setUser={setUser} />}
+      </AppFont>
   );
 }
 

@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useEffect, useState} from "react";
 import styled from "styled-components";
-import Card from "./Card/Card";
+import firebase from 'firebase';
+import "firebase/firestore";
 
+import Card from "./Card/Card";
 import MiniProfile from "../../Shared/MiniProfile/MiniProfile";
 import ChatMessages from "../../Shared/Chat/ChatMessages";
 import ChatTextSender from "../../Shared/Chat/ChatTextSender";
@@ -63,6 +65,8 @@ const ChatContainer = styled.div`
         ${props?.styles}
 `}`
 
+
+
 const ChatMessageSenderWrapper = styled.div`
     ${props=>`
         display:flex;
@@ -74,50 +78,73 @@ const ChatMessageSenderWrapper = styled.div`
         ${props?.styles}
 `}`
 
+const PopUp = styled.div`
+    ${props=>`
+        width: 40%;
+        height: 40%;
+        position: absolute;
+        top: 50%;
+        left: 53%;
+        display:flex;
+        border-radius: 3vh;
+        border: none;
+        flex-direction:column;
+        transform: translate(-50%, -50%);
+        background-color: red;
+        ${props?.styles}
+
+
+        -moz-box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
+        -webkit-box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
+        box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
+`}`;
+
+const Button = styled.input`
+    ${props =>`
+        margin-top: 3%;
+        height: 20%;
+        align-self: center;
+        width: 65%;
+        border-radius: 1vh;
+        border: none;
+        text-align: center;
+        display:${props.pop == 'init' ? 'flex' : 'none'};
+
+    `}`
+
+const Titol = styled.h1`
+    ${props =>`
+        margin-top: 12%;
+        height: 20%;
+        align-self: center;
+        width: 65%;
+        border-radius: 1vh;
+        border: none;
+        text-align: center;
+        justify-content: center;
+        display:${props.pop == 'init' ? 'flex' : 'none'};
+    
+    `}`
+    
+
 const Game = (props) => {
+    const [modalForm,setModal] = useState(false);
+    const loadPop = () => {
+        if(!modalForm) setModal(true);
+        if(modalForm) setModal(false);
+    }   
+
+
+
     return (
         <Wrapper>
             <GameContainer>
-                <DivContainer /* styles="margin-bottom: 40vh;" */>
-                    <Card name="Verde"/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                </DivContainer>
-                <DivContainer>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                    <Card/>
-                </DivContainer>
+            <PopUp>
+                <Titol pop={'init'}>Texto a cambiar</Titol>
+                <Button placeholder="Escribe tu pregunta aqui" pop={'idnit'}/>
+
+                <Button placeholder="Escribe tu respuesta aqui" pop={'init'}/>
+            </PopUp>
             </GameContainer>
             {/* <Chat chatMessages={props.chatMessages} userMatch={props.userMatch} user={props.user}/> */}
             <Wrapper2>

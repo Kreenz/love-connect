@@ -8,7 +8,7 @@ const ObjLabel = styled.label`
     height:7vh;
     text-align: left;
     align-items: center;
-    color: black;
+    color: white;
     font-size: calc(5px + 2vmin);
     ${props?.styles}
 `}`;

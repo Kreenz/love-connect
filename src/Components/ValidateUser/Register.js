@@ -3,20 +3,22 @@ import styled from "styled-components";
 import firebase from 'firebase';
 import "firebase/firestore";
 
-import Logo from '../Shared/Logo';
 import Form from '../Shared/Form';
 import Button from '../Shared/Button';
 
 const Wrapper = styled.div`
-  background:white;
+  background:transparent
   color:white;
   align-items: center;
+  justify-content:center;
   display: flex;
   flex-direction: column;
+  height:90%;
+
 `;
 
 const Wrapper2 = styled.div`
-  background:white;
+  background:transparent
   color:white;
   align-items: center;
   display: flex;
@@ -26,7 +28,7 @@ const Wrapper2 = styled.div`
 
 const Register = (props) => {
 
-  const register = (email, password) => {
+  const register = (email, password) => { 
     return new Promise(resolve => {
       firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((user) => {
@@ -40,10 +42,20 @@ const Register = (props) => {
     })
 
   }
+  const calcularEdad = (fecha) => {
+    var hoy = new Date();
+    var cumpleanos = new Date(fecha);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
 
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad--;
+    }
+
+    return edad;
+}
   return (
     <Wrapper>
-      <Logo/>
       <Wrapper2>
         <Form 
           name="register"
@@ -67,7 +79,8 @@ const Register = (props) => {
           /* styles={} */
           /* submit={funtion} */
         />
-        <Form 
+        <Form
+          styles={"margin-left:2vw;"} 
           name="register"
           inputs={
             [{
@@ -84,7 +97,7 @@ const Register = (props) => {
               label:"Genero: ",
               name:"select",
               type:"select",
-              options:["Hombre", "Mujer", "Triangulo?"]
+              options:["chico", "chica", "no binario"]
             }]
           }
           /* styles={} */
@@ -114,12 +127,12 @@ const Register = (props) => {
                 register(email, password).then(data => {
                   if(data.user){
                     props.db.collection("perfiles").add({
-                      busca:select,
+                      busca:null,
                       correo:email,
                       descripcion:null,
                       distancia:null,
                       edad:new Date(date).getTime(),
-                      genero:null,
+                      genero:select,
                       karma:null,
                       nombre:name,
                       posicion:[],

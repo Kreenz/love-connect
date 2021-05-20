@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 import "firebase/firestore";
 
+import chatBackground from "../../../Assets/Images/chat_background.png";
 
 const Wrapper = styled.div`
   ${props=>`
@@ -10,11 +11,14 @@ const Wrapper = styled.div`
         align-items:flex-start;
         font-size: 2.5vh;
         width: 100%;
-        height:100%;
-        background: black;
+        height:${props.active ? "70%" : "100%"};
+        background:url('${props?.background}') no-repeat center;
+        background-size: 40% 45%;
+        background-color: #f5f5f5;
         text-align: center;
         align-items: center;
         overflow-y:auto;
+        padding-bottom:4vh;
         ${props?.styles}
 `}`
 
@@ -35,6 +39,8 @@ const Message = styled.span`
         flex-wrap:wrap;
         background: ${(props.messageUserId === props.userId) ? "lightgreen" : "white"};
         border-radius:0.5vh;
+        box-sizing: border-box;
+        border: 0.1vh solid black;
         width:fit-content;
         max-width:95%;
         padding: 1%;
@@ -46,21 +52,34 @@ const Message = styled.span`
 `}`
 
 const MessageEnd = styled.div`
-    margin-bottom:1vh;
+    width:1vh;
+    height:5vh;
 `
 
 const ChatMessages = (props) => {
     const [resize, setResize] = useState({messageId:"", expand: false});
     let messagesEnd = "";
 
+    const loadSelectedGame = (id_game) => {
+        props.db
+        .collection("juegos")
+        .doc(id_game)
+        .get()
+        .then( game => {
+            
+            let res = /*JSON.parse(game.data().respuestas)*/ "";       
+            props.setGameMatch({state: game.data().state, respuestas:res})
+            props.setScreen("game");
+        })
+    }
+
     const generateResponse = (type, message, messageId, resize, setResize) => {
         if(type === "game") {
-            //cargas juego del message
+            loadSelectedGame(JSON.parse(message).id_game);
         }
 
         if(type === "image") {
             resize.expand ? setResize({messageId:"", expand:false}) : setResize({messageId: messageId, expand:true});
-            console.log(resize);
         }
     }
 
@@ -84,14 +103,14 @@ const ChatMessages = (props) => {
             return unsubscribe;
         }
 
-    }, [props.db]) 
+    }, [props.userMatch.id_chat]) 
 
     useEffect(() => {
         messagesEnd.scrollIntoView({ behavior: "smooth" })
     }, [props.chatMessages]);
 
     return (
-        <Wrapper styles={props.styles}>
+        <Wrapper background={chatBackground} styles={props.styles} active={props.active}>
             { props.chatMessages && props.chatMessages.map(message=>{
                 return(
                     <MessageWrapper messageUserId={message.id_perfil} userId={props.user.userId}>
@@ -103,7 +122,7 @@ const ChatMessages = (props) => {
                             messageUserId={message.id_perfil} 
                             userId={props.user.userId}
                             onClick={() => { generateResponse(message.type, message.message, message.id, resize, setResize) }}>
-                            {(message.type === "text") ? message.message : (message.type === "game") ? "HA SOLICITADO JUGAR A: " : ""}
+                            {(message.type === "text") ? message.message : (message.type === "game") ? "HA SOLICITADO JUGAR A " + JSON.parse(message.message).name + "": ""}
                         </Message>
                         
                     </MessageWrapper>

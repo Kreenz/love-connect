@@ -4,13 +4,36 @@ import styled from "styled-components";
 import Input from '../Shared/Formulario/Input';
 import Label from '../Shared/Formulario/Label';
 
-const DivForm = styled.form`
-  border-radius:1vh;
-  width:17vw;
-  height:30vh;
+const ButtonSubmit = styled.button`
+  border-radius:0.3vh;
+  width:15vw;
+  height:6vh;
   text-align: center;
   align-items: center;
+  font-size: calc(5px + 2vmin);
+  color: white;
+  border:none;
+  cursor:pointer;
+  background-color #20bf55;
+  background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
+  transition: box-shadow 0.2s ease-in;
+`
+
+const DivForm = styled.form`
+  ${props =>`
+    border-radius:1vh;
+    text-align: center;
+    align-items: center;
+    ${props.styles}
+  `}
 `;
+
+const DivHoverWrapper = styled.div`
+  &:hover ${ButtonSubmit} {
+    box-shadow 0 0 2vh #01baef;
+    text-shadow: 0 0 0.3vh white;
+  }
+`
 
 const DivInput = styled.div`
   border-radius:1vh;
@@ -19,17 +42,12 @@ const DivInput = styled.div`
   display: flex;
   flex-direction: column; 
   align-items: flex-start;
+  align-items:center;
+  justify-content:center;
+  margin-top:2vh;
 `;
 
-const ButtonSumbit = styled.button`
-  border:none;
-  border-radius:1vh;
-  width:15vw;
-  height:8vh;
-  text-align: center;
-  align-items: center;
-  font-size: calc(5px + 2vmin);
-`
+
 
 const Form = (props) => {
 
@@ -40,6 +58,7 @@ const Form = (props) => {
         case "text":
         case "number":
         case "date":
+        case "password":
           view.push(
            <DivInput>
             <Label valor={element.label}/>
@@ -64,9 +83,9 @@ const Form = (props) => {
         case "submit":
           view.push(
            <DivInput>
-             <ButtonSumbit name={element.name} value={element.label} onClick ={(e) => { e.preventDefault(); element.fun(); }}>
+             <ButtonSubmit name={element.name} value={element.label} onClick ={(e) => { e.preventDefault(); element.fun(); }}>
               {element.label}
-             </ButtonSumbit>
+             </ButtonSubmit>
            </DivInput>
            );
         break;
@@ -80,8 +99,10 @@ const Form = (props) => {
   }
 
   return (
-    <DivForm name={props.name}>
-      {CreateInpunts()}
+    <DivForm styles={props.styles}name={props.name}>
+      <DivHoverWrapper>
+        {CreateInpunts()}
+      </DivHoverWrapper>
     </DivForm>
   );
 };

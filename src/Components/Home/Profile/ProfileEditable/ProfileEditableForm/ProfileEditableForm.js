@@ -37,6 +37,16 @@ const WrapperSlider = styled.div`
       ${props?.styles}
 `}`;
 
+const ButtonSumbit = styled.button`
+  border:none;
+  border-radius:1vh;
+  width:15vw;
+  height:8vh;
+  text-align: center;
+  align-items: center;
+  font-size: calc(5px + 2vmin);
+`
+
 const ProfileEditableForm = (props) => {
 
   const CreateInpunts = () => {
@@ -49,22 +59,20 @@ const ProfileEditableForm = (props) => {
           view.push(
            <DivInput>
             <Label valor={element.label}/>
-            {console.log(element.styles)}
-            <Input name={element.name} type={element.type} placeholder={element.label} styles={element.styles} value={element.value}/>
+            {/*console.log(element.styles)*/}
+            <Input name={element.name} type={element.type} placeholder={element.label} styles={element.styles} value={element.value} onChange={element.onChange}/>
            </DivInput>
            );
         break;
         case "select":
           const options = [];
           element.options.forEach(element2 => {
-            console.log(element2);
-            /* if(element2 == element.typegen)    options.push(<option value={element2}>{element2}</option>);
-            else  */  options.push(<option value={element2}>{element2}</option>);
+            options.push(<option value={element2}>{element2}</option>);
           })
           view.push(
             <DivInput>
-            <Label valor={element.label}/>
-            <Input name={element.name} type={element.type} options={options} styles={element.styles} value={element.value} noInput/>
+              <Label valor={element.label}/>
+              <Input name={element.name} type={element.type} options={options} styles={element.styles} value={element.value} onChange={element.onChange} noInput/>
             </DivInput>
           );
         break;
@@ -75,13 +83,22 @@ const ProfileEditableForm = (props) => {
                         <Label valor={element.label}/>
                         <DivInput styles="flex-direction:row; width:100%">
                             <WrapperSlider>
-                              <Nouislider step={element.step} range={element.range} start={element.start} connect />
+                              <Nouislider step={element.step} range={element.range} start={element.start} name={element.name} onChange={element.onChange} connect />
                             </WrapperSlider>
                             <Label valor={element.value} styles="margin-left:2vw; width:4vw"/>
                         </DivInput>
                     </DivInput>
                 );
             /* } */
+        break;
+        case "submit":
+          view.push(
+           <DivInput>
+             <ButtonSumbit name={element.name} value={element.label} onClick ={(e) => { e.preventDefault(); element.fun(); }}>
+              {element.label}
+             </ButtonSumbit>
+           </DivInput>
+           );
         break;
         default:
         break;
