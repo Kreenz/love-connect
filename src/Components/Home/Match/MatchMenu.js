@@ -167,11 +167,10 @@ const MatchMenu = (props) => {
 
     const nextUser = () => {
         let usersList = [];
-
         for(let i = 0; i < props.nextUserMatchList.length; i++) {
             if(i > 0){
                 usersList.push([
-                    props.nextUserMatchList[i][0].userId,
+                    props.nextUserMatchList[i][0],
                     {
                         userId: props.nextUserMatchList[i][1].userId,
                         username: props.nextUserMatchList[i][1].username,
@@ -191,7 +190,6 @@ const MatchMenu = (props) => {
                 ])
             }
         }
-
         props.setNextUserMatchList(usersList);
     }
 

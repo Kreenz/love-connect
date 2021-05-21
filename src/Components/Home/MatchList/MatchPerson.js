@@ -4,13 +4,14 @@ import styled from "styled-components";
 import MiniProfileWrapper from "../../Shared/MiniProfile/MiniProfileWrapper";
 
 const WrapperPerson = styled.div`
-    height: 7vw;
-    width: 6vw;
-    margin-left: 1vw;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    cursor:pointer;
-`;
+    ${props =>`
+        height: 7vw;
+        width: 6vw;
+        margin-left: 1vw;
+        margin-bottom: 2vh;
+        cursor:pointer;
+        display: ${props.active ? "flex" : "none"};
+`}`;
 
 const MatchPerson = (props) =>{
     const [userMatch, setUserMatch] = useState({
@@ -34,7 +35,8 @@ const MatchPerson = (props) =>{
                 .get()
                 .then( user => {
                     user.forEach(docUser => {
-                        
+                        console.log("-------ta mal-------")
+                        console.log(doc.data().tastes)
                         let userMatch = {
                             userId: doc.id,
                             username: doc.data().nombre,
@@ -45,7 +47,7 @@ const MatchPerson = (props) =>{
                             gender:doc.data().genero,
                             lookingFor: doc.data().busca,
                             id_chat: docUser.data().id_chat,
-                            tastes:[],
+                            tastes:doc.data().tastes,
                             photos:photos,
                             localitzation:{lat: doc.data().posicion._lat, long: doc.data().posicion._long},
                             upper_age_range:doc.data().rango_edad_mayor,
@@ -53,6 +55,7 @@ const MatchPerson = (props) =>{
                             description: doc.data().descripcion
                         }
 
+                        console.log(doc.data().reciente)
                         setUserMatch(userMatch)
                         props.setUserMatch(userMatch)
 
@@ -93,7 +96,7 @@ const MatchPerson = (props) =>{
                             gender:doc.data().genero,
                             lookingFor: doc.data().busca,
                             id_chat: docUser.data().id_chat,
-                            tastes:[],
+                            tastes:doc.data().tastes,
                             photos:photos,
                             localitzation:{lat: doc.data().posicion._lat, long: doc.data().posicion._long},
                             upper_age_range:doc.data().rango_edad_mayor,
@@ -111,14 +114,14 @@ const MatchPerson = (props) =>{
     }, [])
 
     return(
-        <WrapperPerson onClick={() => { 
+        <WrapperPerson active={userMatch.username?.toLowerCase().includes(props.searchText.toLowerCase())} onClick={() => { 
             //[props.userIndex] es el indice es decir array[i]
             //el primer usermatch es el de la tarjeta, el segundo pos no me acuerdo, algo para ver que salia la pantalla que toca
             searchUserMatch(props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages);
         }}>
 
-        <MiniProfileWrapper user={userMatch}>
-        </MiniProfileWrapper>
+            <MiniProfileWrapper user={userMatch}>
+            </MiniProfileWrapper>
            
         </WrapperPerson>
     );

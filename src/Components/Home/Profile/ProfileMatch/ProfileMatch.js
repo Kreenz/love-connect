@@ -82,7 +82,7 @@ const ProfileMatch = (props) => {
         <Wrapper expand={expand}>
           <PhotoWrapper expand={expand} photo={props.userMatch.photos[imgIndex]} >
             <PhotoContentWrapper>
-              <Report oldScreen={props.oldScreen}/>
+              <Report setScreen={props.setScreen} oldScreen={props.oldScreen} usermatch={props.userMatch} user={props.user} db={props.db}/>
             </PhotoContentWrapper>
             <PhotoContentWrapper>
               <ImageSlider userPhotos={props.userMatch.photos} setImgIndex={setImgIndex} imgIndex={imgIndex}/>

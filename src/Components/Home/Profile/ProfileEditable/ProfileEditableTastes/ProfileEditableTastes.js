@@ -12,21 +12,17 @@ const Wrapper = styled.div`
     outline: none;
     border: none;
     border-radius: 1vh;
+    color:black;
 `;
 
 
 
 const ProfileEditableTastes = (props) =>{
 
-
-
-
-
     return (
         <Wrapper>
-
+            {props.tastes}
         </Wrapper>
-
     )
 
 }

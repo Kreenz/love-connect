@@ -17,19 +17,19 @@ import Input from '../../../Shared/Formulario/Input';
 ); */
 
 const Wrapper = styled.div`
-    background: tomato;
+    background-color: #14557b;
     color:white;
     width:100%;
     height:100%;
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin-left:10vw;
+    margin-left:15.6vw;
 `;
 
 const WrapperPhotos = styled.div`
-
-    background: black;
+    background-color: #14557b;
+    border-top-left-radius:2vh;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -37,7 +37,8 @@ const WrapperPhotos = styled.div`
 `;
 
 const WrapperPhotosElements = styled.div`
-    background: black;
+    background-color: #f5f5f5;
+    border-bottom-right-radius:2vh;
     display: flex;
     flex-direction: row;
     width: 100%;  
@@ -45,7 +46,8 @@ const WrapperPhotosElements = styled.div`
 `
 
 const WrapperPhotosEdit = styled.div`
-    background: red;
+    background-color: lightblue;
+    border-radius:0.5vh;
     display: flex;
     flex-direction: row;
     height: 8vw;
@@ -59,21 +61,17 @@ const WrapperPhotosEdit = styled.div`
 
 const WrapperForm1 = styled.div`
     display: flex;
-    width:100%;
     justify-content:center;
 `;
 
 const WrapperForm2 = styled.div`
     display: flex;
-    width:95%;
-    height: 20vh;
-    justify-content:space-between;
+    justify-content:space-around;
+    width:100%;
 `;
 
 const WrapperForm2_2 = styled.div`
     display: flex;
-    width:20vw;
-    height:30vh;
     flex-direction: column;
     align-items:center;
 `;
@@ -82,13 +80,12 @@ const WrapperForm2_2 = styled.div`
 const WrapperTastes = styled.div`
     height: 20%;
     width: 100%;
-    background: violet;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 `;
 
-const WrapperTastesEdit = styled.div`
+/* const WrapperTastesEdit = styled.div`
     height: 20%;
     width: 20%;
     background: white;
@@ -100,7 +97,7 @@ const WrapperTastesEdit = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
-`;
+`; */
 
 
 const ProfileEditable = (props) => {
@@ -147,16 +144,7 @@ const ProfileEditable = (props) => {
             recent:props.user.recent,
             gender:props.user.gender,
             lookingFor:lookingFor,
-            tastes:[
-                {
-                    name: "poco",
-                    description: "sabe a poco"
-                },
-                {
-                    name: "poco2",
-                    description: "sabe a poco2"
-                }
-            ],
+            tastes:props.user.tastes,
             photos:props.photos,
             upper_age_range:upper_age_range,
             lower_age_range:lower_age_range
@@ -170,6 +158,7 @@ const ProfileEditable = (props) => {
     const [distance, setDistance] = useState(props.user.distance);
     const [upper_age_range, setUpper_age_range] = useState(props.user.upper_age_range);
     const [lower_age_range, setLower_age_range] = useState(props.user.lower_age_range);
+    const [tastes, setTastes] = useState(props.user.tastes);
 
     const Save = () => {
         let updates = {
@@ -178,7 +167,8 @@ const ProfileEditable = (props) => {
             busca:lookingFor,
             distancia:distance,
             rango_edad_mayor:upper_age_range,
-            rango_edad_menor:lower_age_range
+            rango_edad_menor:lower_age_range,
+            tastes:tastes
         }
         props.db.collection("perfiles").doc(props.user.userId).update(updates);
     }
@@ -196,16 +186,7 @@ const ProfileEditable = (props) => {
             gender:props.user.gender,
             lookingFor:lookingFor,
             localitzation:props.user.localitzation,
-            tastes:[
-                {
-                    name: "poco",
-                    description: "sabe a poco"
-                },
-                {
-                    name: "poco2",
-                    description: "sabe a poco2"
-                }
-            ],
+            tastes:tastes,
             photos:props.user.photos,
             upper_age_range:upper_age_range,
             lower_age_range:lower_age_range
@@ -213,41 +194,64 @@ const ProfileEditable = (props) => {
         props.setUser(currentUser);
     }
 
+    const add = () =>{
+        let components = tastes;
+        components.push("");
+        setTastes(components);
+        return loadTastes();
+    }
+
+
     /* console.log(props); */
     const loadPhotos = (props) => {
         let components = [];
         for(let i = 0; i < props.user.photos.length; i++){
             components.push(
-                <ProfileEditablePhoto user={props.user.photos[i]}/>   
-                          
+                <ProfileEditablePhoto user={props.user.photos[i]}/>           
             )
-
-         
         }
 
         return components; 
     }
 
 
-    const loadTastes = (props) => {
+    const loadTastes = () => {
         /* console.log(profileUser.tastes.length) */
         let components = [];
         
-        for(let i = 0; i < profileUser.tastes.length; i++){
+        tastes.forEach(taste => {
             components.push(
-                <ProfileEditableTastes/>             
+                <Input type={"text"} name={"tast"} value={taste} styles="
+                    border: none;
+                    border-radius: 0.5vh;
+                    width: 10vw;
+                    height: 6vh;
+                    text-align: center;
+                    align-items: center;
+                    font-size: 2.5vh;
+                    color: black;
+                "
+                onChange={(e) => {
+                    let newTaste = [];
+                    let form = document.getElementsByName("tast");
+                    console.log("inputs");
+                    console.log(form[0]);
+                    form.forEach(tast => {
+                        if(tast.value != null || tast.value != ""){
+                            if(tast.value != e.target.value){
+                                newTaste.push(tast.value);
+                            }
+                            else {newTaste.push(e.target.value);}
+                        }
+                    })
+                    setTastes(newTaste)
+                }}/>      
             )
+        });
 
-         
-        }
-        components.push(
-            <WrapperTastesEdit>
-                <ProfileEditableTastesButton/>
-            </WrapperTastesEdit>
-                
-        );
         return components; 
     }
+
     return (
         <Wrapper>
             <WrapperPhotos>
@@ -276,13 +280,6 @@ const ProfileEditable = (props) => {
                             styles:"width:100%;"
                         },
                         {
-                            label:"Estado: ",
-                            name:"estado",
-                            type:"text",
-                            value:profileUser.username,
-                            styles:"width:100%;"
-                        },
-                        {
                             label:"Descripción: ",
                             name:"descripcion",
                             type:"text",
@@ -306,10 +303,10 @@ const ProfileEditable = (props) => {
                             options:["chico", "chica", "no binario"],
                             typegen:lookingFor,
                             onChange:(e) => setLookingFor(e.target.value),
-                            styles:"width:70%;"
+                            styles:"width:100%;"
                         }]
                     }
-                    styles="width:10vw; height:10vh;align-items:center;"
+                    styles={"width:10vw; height:10vh;align-items:center;"}
                     /* submit={funtion} */
                 />
                 <WrapperForm2_2>
@@ -332,12 +329,10 @@ const ProfileEditable = (props) => {
                                     /* console.log(parseInt(pe.getAttribute("aria-valuetext"))) */
                                     setDistance(parseInt(pe.getAttribute("aria-valuetext")));
                                 },
-                                styles:"width:20%;"
+                                styles:"width:6vw; align-items:center;"
                             }]
                         }
-                        styles="height:5%; align-items:center; width:18vw; margin-bottom:5vh;"
                     />
-                    <br></br>
                     <ProfileEditableForm
                         name="form1"
                         inputs={
@@ -357,10 +352,9 @@ const ProfileEditable = (props) => {
                                     /* console.log(parseInt(pe.getAttribute("aria-valuetext"))) */
                                     setUpper_age_range(parseInt(pe2.getAttribute("aria-valuetext")));
                                 },
-                                styles:"width:20%;"
+                                styles:"width:6vw; align-items:center;"
                             }]
                         }
-                        styles="height:5%; align-items:center; width:20vw;"
                     />
                     
                 </WrapperForm2_2>
@@ -383,7 +377,22 @@ const ProfileEditable = (props) => {
             />
             
             <WrapperTastes>
-                {loadTastes(props)}
+                {console.log(tastes)}
+                {loadTastes()}
+                <Input type={"submit"} name={"tastes"} value={"Añadir"} styles="
+                    border: none;
+                    border-radius: 0.5vh;
+                    width: 10vw;
+                    height: 6vh;
+                    text-align: center;
+                    align-items: center;
+                    font-size: 2.5vh;
+                    background-color: #20bf55;
+                    background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
+                    transition: box-shadow 0.2s ease-in;
+                    color: white;
+                "
+                onClick={() => {add();SaveJS();}}/>
             </WrapperTastes>
         </Wrapper>
     );

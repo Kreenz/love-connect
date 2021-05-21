@@ -41,11 +41,25 @@ const HoverWrapper = styled.div`
     }
 `
 
+const SubMenuWrapper = styled.div`
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    height:80%;
+    width:100%;
+`
+
 const WrapperMatches = styled.div`
-    display:inline-flex;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:flex-start;
+    justify-content:flex-start;
     width: 100%;
-    height: 70vh;
+    overflow-y: auto;
+    max-height:70vh;
     flex-wrap: wrap;
+    padding-top:2vh;
 `;
 
 
@@ -88,28 +102,30 @@ const MatchList = (props) => {
         <Wrapper>
             <MiniProfile user={props.user} setScreen={props.setScreen} setUserMatch={props.setUserMatch}/>
             <MatchSearcher setSearchText={setSearchText}/>
-            <WrapperMatches>
-            { 
-            userMatchList && userMatchList.map(userMatch =>{
-                return(
-                    <MatchPerson 
-                        db={props.db}
-                        userId={props.user.userId} 
-                        userMatchId={userMatch.id_perfil}
-                        userMatch={props.userMatch}
-                        setUserMatch={props.setUserMatch}
-                        setScreen={props.setScreen}
-                        searchText={searchText}
-                        setChatMessages={props.setChatMessages}
-                        screen={props.screen}
-                    />   
-                )
-            }) }
-                {/*loadMatches(userMatchList, props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages)*/}
-            </WrapperMatches>
-            <HoverWrapper>
-                <ButtonSignOut onClick={() => {signOut()}}>CERRAR SESSION</ButtonSignOut>
-            </HoverWrapper>
+            <SubMenuWrapper>
+                <WrapperMatches>
+                { 
+                userMatchList && userMatchList.map(userMatch =>{
+                    return(
+                        <MatchPerson 
+                            db={props.db}
+                            userId={props.user.userId} 
+                            userMatchId={userMatch.id_perfil}
+                            userMatch={props.userMatch}
+                            setUserMatch={props.setUserMatch}
+                            setScreen={props.setScreen}
+                            searchText={searchText}
+                            setChatMessages={props.setChatMessages}
+                            screen={props.screen}
+                        />   
+                    )
+                }) }
+                    {/*loadMatches(userMatchList, props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages)*/}
+                </WrapperMatches>
+                <HoverWrapper>
+                    <ButtonSignOut onClick={() => {signOut()}}>CERRAR SESSION</ButtonSignOut>
+                </HoverWrapper>
+            </SubMenuWrapper>
         </Wrapper>
     );
 };

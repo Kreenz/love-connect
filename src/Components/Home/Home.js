@@ -98,6 +98,22 @@ const Home = (props) => {
 
   useEffect(() => {
     loadScreen();
+    let recent = new Date().getTime();
+    let user = props.user;
+    props.db
+    .collection("perfiles")
+    .doc(props.user.userId)
+    .update(
+      {
+        reciente: recent
+      }
+    )
+
+    user.recent = recent;
+    props.setUser(
+      user
+    )
+
   }, [screen])
 
   useEffect(() => {
@@ -143,10 +159,10 @@ const Home = (props) => {
                       email:doc.data().correo,
                       age:doc.data().edad,
                       distance: Math.round(distanceFromBetween),
-                      recent:null,
+                      recent:doc.data().reciente,
                       gender:doc.data().genero,
                       lookingFor: doc.data().busca,
-                      tastes:[],
+                      tastes:doc.data().tastes,
                       photos:photos,
                       localitzation:{lat: doc.data().posicion._lat, long: doc.data().posicion._long},
                       upper_age_range:doc.data().rango_edad_mayor,

@@ -2,6 +2,9 @@ import React, { useState } from "react"
 import styled from "styled-components";
 import "firebase/firestore";
 
+import sendIcon from "../../../Assets/Images/Icons/send_icon.png";
+import playIcon from "../../../Assets/Images/Icons/play_icon.png";
+
 const Wrapper = styled.div`
   ${props=>`
         display:flex;
@@ -38,41 +41,51 @@ const ButtonMessageWrapper = styled.div`
     height:100%;
 `
 
-const ButtonPhotoUploader = styled.button`
-    width: 45%;
-    height: 50%;
-    border:none;
-    cursor:pointer;
-    margin-right:2%;
-    color: white;
-    border:none;
-    cursor:pointer;
+const ButtonWrapper = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
     background-color #20bf55;
     background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
-    transition: box-shadow 0.2s ease-in;
     border-radius:0.3vh;
-    font-size:1.6vh;
 `
+
+const ButtonPhotoUploader = styled.button`
+    ${props =>`
+        width: 2vw;
+        height: 4vh;
+        border:none;
+        cursor:pointer;
+        color: white;
+        border:none;
+        cursor:pointer;
+        background:url(${props.background}) no-repeat center;
+        background-size: 2.5vh 2.5vh;
+        transition: box-shadow 0.2s ease-in;
+        border-radius:0.3vh;
+        font-size:1.6vh;
+        
+`}`
 
 const HiddenFileInput = styled.input`
     display:none;
 `
 
 const ButtonMessageSender = styled.button`
-    width: 100%;
-    height: 50%;
-    border:none;
-    cursor:pointer;
-    color: white;
-    border:none;
-    cursor:pointer;
-    background-color #20bf55;
-    background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
-    transition: box-shadow 0.2s ease-in;
-    border-radius:0.3vh;
-    font-size:1.6vh;
-    margin-right:1vh;
-`
+    ${props=>`
+        width: 4vw;
+        height: 4vh;
+        border:none;
+        cursor:pointer;
+        color: white;
+        border:none;
+        cursor:pointer;
+        background:url(${props.background}) no-repeat center;
+        background-size: 3.2vh 3.1vh;
+        transition: box-shadow 0.2s ease-in;
+        border-radius:0.3vh;
+        font-size:1.6vh;
+`}`
 
 const HoverWrapper = styled.div`
     display:flex;
@@ -126,16 +139,18 @@ const ChatTextSender = (props) => {
             <MessageArea placeholder={"Escribe aqui tu mensaje..."} value={message} onKeyUp={ (e) => { onEnterMessage(e) } } onChange={ (e) => { setMessage(e.target.value) }}/>
             <ButtonMessageWrapper>
                 <HoverWrapper>
-                    <ButtonPhotoUploader onClick={() => {props.setShowSlider(!props.showSlider)}}>
-                        J
-                    </ButtonPhotoUploader>
+                    <ButtonWrapper>
+                        <ButtonPhotoUploader  background={playIcon} onClick={() => {props.setShowSlider(!props.showSlider)}}>
+                        </ButtonPhotoUploader>
+                    </ButtonWrapper>
                 </HoverWrapper>
 
                 <HiddenFileInput type="file"/>
                 <HoverWrapper>
-                    <ButtonMessageSender onClick={() => { sendMessage(message, "text"); setMessage("")}}>
-                        ENVIAR
-                    </ButtonMessageSender>   
+                    <ButtonWrapper>
+                        <ButtonMessageSender background={sendIcon} onClick={() => { sendMessage(message, "text"); setMessage("")}}>
+                        </ButtonMessageSender>   
+                    </ButtonWrapper>
                 </HoverWrapper>
 
             </ButtonMessageWrapper>

@@ -79,9 +79,8 @@ const Login = (props) => {
                         snapshot.forEach((doc) => {
                           /* console.log(doc)
                           console.log(doc.data()) */
-                          let f = new Date();
-                          f.setTime(doc.data().reciente);
-                          let photos = JSON.parse(doc.data().fotos);
+                          //let photos = JSON.parse(doc.data().fotos);
+                          let photos = ["","",""];
                          /* let arrayPhotos = [];
                           var pathReference = firebase.storage().ref(doc.id+"/photo_2021-05-12_11-29-49.jpg");
                           pathReference.getDownloadURL().then((url) => {
@@ -118,10 +117,10 @@ const Login = (props) => {
                             email:doc.data().correo,
                             age:doc.data().edad,
                             distance:doc.data().distancia,
-                            recent:f,
+                            recent: doc.data().reciente,
                             gender:doc.data().genero,
                             lookingFor: doc.data().busca,
-                            tastes:[],
+                            tastes:doc.data().tastes,
                             photos:photos,
                             localitzation:null,
                             upper_age_range:doc.data().rango_edad_mayor,

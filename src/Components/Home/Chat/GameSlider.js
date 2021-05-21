@@ -9,6 +9,10 @@ const Wrapper = styled.div`
         height: ${props.active ? "25%": "0%"};
         width: 100%;
         background:transparent;
+        transition: All 0.2s ease-in-out;
+        box-sizing: border-box;
+        border-top: 0.3vh solid #39e5b6;
+        margin-top: 0.5vh;
         ${props?.styles}
 `}`
 

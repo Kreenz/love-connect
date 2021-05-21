@@ -27,6 +27,7 @@ const ColWrapper = styled.div`
 `;
 
 const InfoText = styled.span`
+    color:#14557b;
     font-weight:600;
     font-size:3vh;
 `;

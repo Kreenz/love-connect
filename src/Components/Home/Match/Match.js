@@ -135,14 +135,17 @@ const Match = (props) => {
             <MatchContainer>
                 <MatchProfileImg userImage={props.nextUserMatchList[0]?.[1]?.photos?.[ImgIndex]}>
                   <Wrapper2>
+                    {/* {console.log(props.nextUserMatchList[0]?.[1])}
+                    {console.log(props.userMatch)} */}
                     <Report 
                       styles={"height:unset; width:100%;display:flex; flex-direction:column; justify-content:flex-end;align-items:flex-end; padding-right: 1vh; padding-top: 1vh;"}
                       stylos="top:13%; justify-content:center; align-items:center; width:100%;" 
                       isUser={isUser} 
                       setIsUser={setIsUser} 
-                      usermatch={props.userMatch} 
+                      usermatch={props.nextUserMatchList[0]?.[1]} 
                       user={props.user} db={props.db} 
-                      oldScreen={props.oldScreen}/>
+                      oldScreen={props.oldScreen}
+                      setScreen={props.setScreen}/>
                     <InfoWrapper>
                         <InfoData>{props.nextUserMatchList[0]?.[1]?.username}</InfoData>
                         <InfoData>{props.nextUserMatchList[0]?.[1]?.age} años</InfoData>

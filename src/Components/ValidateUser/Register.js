@@ -28,7 +28,7 @@ const Wrapper2 = styled.div`
 
 const Register = (props) => {
 
-  const register = (email, password) => { 
+  const register = (email, password) => {
     return new Promise(resolve => {
       firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((user) => {
@@ -42,6 +42,7 @@ const Register = (props) => {
     })
 
   }
+
   const calcularEdad = (fecha) => {
     var hoy = new Date();
     var cumpleanos = new Date(fecha);
@@ -54,6 +55,7 @@ const Register = (props) => {
 
     return edad;
 }
+
   return (
     <Wrapper>
       <Wrapper2>
@@ -73,14 +75,13 @@ const Register = (props) => {
             {
               label:"Repetir contraseña: ",
               name:"passwd2",
-              type:"text"
+              type:"password"
             }]
           }
           /* styles={} */
           /* submit={funtion} */
         />
-        <Form
-          styles={"margin-left:2vw;"} 
+        <Form 
           name="register"
           inputs={
             [{
@@ -100,7 +101,7 @@ const Register = (props) => {
               options:["chico", "chica", "no binario"]
             }]
           }
-          /* styles={} */
+          styles={"margin-left:2vh;"}
           /* submit={funtion} */
         />
       </Wrapper2>
@@ -113,41 +114,48 @@ const Register = (props) => {
               type:"submit",
               fun: () => {
                 let form = document.getElementsByTagName("form");
-                console.log(form[0])
                 let inputs = form[0].elements;
                 let email = inputs["mail"].value;
                 let password = inputs["passwd"].value;
-                //let password2 = inputs["passwd2"].value;
-                let form2 = document.getElementsByTagName("form");
-                let inputs2 = form2[1].elements;
+                let password2 = inputs["passwd2"].value;
+                let inputs2 = form[1].elements;
                 let name = inputs2["name"].value;
                 let date = inputs2["date"].value;
                 let select = inputs2["select"].value;
 
-                register(email, password).then(data => {
-                  if(data.user){
-                    props.db.collection("perfiles").add({
-                      busca:null,
-                      correo:email,
-                      descripcion:null,
-                      distancia:null,
-                      edad:new Date(date).getTime(),
-                      genero:select,
-                      karma:null,
-                      nombre:name,
-                      posicion:[],
-                      rango_edad_mayor:null,
-                      rango_edad_menor:null,
-                      reciente:null
-                    }).then(data =>{
-                      console.log("<-- datos")
-                      console.log(data);
-                    })
-                  } else {
-                    props.setState(data.message)
-                  }
-
-                });
+                if(password == password2){
+                  register(email, password).then(data => {
+                    if(data.user){
+                        props.db.collection("perfiles").add({
+                          busca:"no binario",
+                          correo:email,
+                          descripcion:"",
+                          distancia:15,
+                          edad:calcularEdad(date),
+                          fotos:"[]",
+                          genero:select,
+                          karma:50,
+                          nombre:name,
+                          posicion:[],
+                          rango_edad_mayor:50,
+                          rango_edad_menor:18,
+                          reciente:new Date(2).getTime(),
+                          tastes:[]
+                        }).then(data =>{
+                          console.log("<-- datos")
+                          console.log(data);
+                        //
+                          let storage = firebase.storage();
+                          let storageUser = storage.ref();
+                        })
+                        props.setTipo(false);
+                    } else {
+                      props.setState(data.message)
+                    }
+                  });
+                }else{
+                  props.setState("La contraseña es incorrecta");
+                }
               }
             }]
           }

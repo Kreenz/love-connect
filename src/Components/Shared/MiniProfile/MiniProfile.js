@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components";
 import Report from "../../Shared/Report/Report";
 import img from  "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/1.jpeg";
@@ -19,6 +19,9 @@ const Wrapper = styled.div`
 
 const ImgLogo = styled.div`
   ${props=>`
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-end;
     background: url("${props.imgFondo}") no-repeat center;
     background-size: 100% auto;
     background-color:lightblue;
@@ -28,6 +31,7 @@ const ImgLogo = styled.div`
     width: 3.5vw;
     margin: 3%;
     margin-right:0;
+    cursor:pointer;
     ${props?.styles}
 `}`;
 
@@ -37,8 +41,15 @@ const PersonName = styled.h3`
   color:white;
 `;
 
-const PersonState = styled.input`
-  margin-left: 2vw;
+const PersonState = styled.div`
+  ${props =>`
+    width:0.7vw;
+    height:0.7vw;
+    border-radius:50%;
+    margin-right:1vh;
+    margin-bottom:1vh;
+    background-color ${props.active ? "green" : "gray"}
+  `}
 `;
 
 const Wrapper1 = styled.div`
@@ -54,14 +65,15 @@ const Wrapper1 = styled.div`
 `}`;
 
 const MiniProfile = (props) => {
+    
+    const recent =  (( (new Date().getTime() / 1000) - (props.user.recent / 1000) ) <= 300);
+    //console.log(recent, new Date().getTime() / 1000 , props.user.recent / 1000 , props.user.username);
     const loadProfile = (user, setUserMatch, setScreen, screen, setOldScreen) => {
       if(setScreen){
         setUserMatch(user);
         if(setOldScreen) setOldScreen(screen);
         setScreen("profile");
-        
       }
-      console.log(props.user.photos[0])
     }
 
     
@@ -73,7 +85,7 @@ const MiniProfile = (props) => {
               onClick={() => loadProfile(props.user, props.setUserMatch, props.setScreen, props.screen, props.setOldScreen)
             }>
 
-              <PersonState type="radio"/>
+              <PersonState active={recent}/>
               
             </ImgLogo>
             <PersonName>{props.user.username}</PersonName>

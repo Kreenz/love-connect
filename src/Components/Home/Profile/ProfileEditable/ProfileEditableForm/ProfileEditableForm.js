@@ -9,9 +9,6 @@ import "nouislider/distribute/nouislider.css";
 
 const DivForm = styled.div`
     ${props=>`
-        border-radius:1vh;
-        width:43vw;
-        height:30vh;
         text-align: center;
         align-items: center;
         justify-content: center;
@@ -27,6 +24,7 @@ const DivInput = styled.div`
         display: flex;
         flex-direction: column; 
         align-items: flex-start;
+        margin-top:1vh;
         ${props?.styles}
 `}`;
 
@@ -39,12 +37,29 @@ const WrapperSlider = styled.div`
 
 const ButtonSumbit = styled.button`
   border:none;
-  border-radius:1vh;
-  width:15vw;
-  height:8vh;
+  border-radius:0.5vh;
+  width: 15vw;
+  height: 6vh;
   text-align: center;
   align-items: center;
-  font-size: calc(5px + 2vmin);
+  font-size: 2.5vh;
+  background-color #20bf55;
+  background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
+  transition: box-shadow 0.2s ease-in;
+  color:white;
+`
+
+const HoverWrapper = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin-bottom:5vh;
+  &:hover ${ButtonSumbit} {
+    box-shadow 0 0 2vh #01baef;
+    text-shadow: 0 0 0.3vh white;
+  }
 `
 
 const ProfileEditableForm = (props) => {
@@ -85,7 +100,7 @@ const ProfileEditableForm = (props) => {
                             <WrapperSlider>
                               <Nouislider step={element.step} range={element.range} start={element.start} name={element.name} onChange={element.onChange} connect />
                             </WrapperSlider>
-                            <Label valor={element.value} styles="margin-left:2vw; width:4vw"/>
+                            <Label valor={element.value} styles="margin-left:2vw; width:6vw"/>
                         </DivInput>
                     </DivInput>
                 );
@@ -94,9 +109,11 @@ const ProfileEditableForm = (props) => {
         case "submit":
           view.push(
            <DivInput>
-             <ButtonSumbit name={element.name} value={element.label} onClick ={(e) => { e.preventDefault(); element.fun(); }}>
-              {element.label}
-             </ButtonSumbit>
+             <HoverWrapper>
+              <ButtonSumbit name={element.name} value={element.label} onClick ={(e) => { e.preventDefault(); element.fun(); }}>
+                {element.label}
+              </ButtonSumbit>
+             </HoverWrapper>
            </DivInput>
            );
         break;

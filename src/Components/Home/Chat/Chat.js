@@ -31,6 +31,7 @@ const ChatContainer = styled.div`
 
 const ChatMessageSenderWrapper = styled.div`
     ${props=>`
+        border-top:0.3vh solid #39e5b6;
         display:flex;
         flex-direction:column;
         align-items:flex-start;
@@ -58,7 +59,7 @@ const Chat = (props) => {
     return (
         <Wrapper>      
             <ChatContainer >
-                <MiniProfile user={props.userMatch} screen={props.screen} setScreen={props.setScreen} setOldScreen={props.setOldScreen} setUserMatch={props.setUserMatch} Report={<Report usermatch={props.userMatch} user={props.user} oldScreen={props.oldScreen} db={props.db}/>}/>
+                <MiniProfile user={props.userMatch} screen={props.screen} setScreen={props.setScreen} setOldScreen={props.setOldScreen} setUserMatch={props.setUserMatch} Report={<Report setScreen={props.setScreen} usermatch={props.userMatch} active={true} user={props.user} oldScreen={props.oldScreen} db={props.db}/>}/>
                 <GameSlider 
                     db={props.db} 
                     games={games} 

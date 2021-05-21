@@ -7,23 +7,20 @@ import "firebase/firestore";
 import Input from "./../../../Shared/Formulario/Input";
 
 const Wrapper = styled.div`
-    background: gray;
+    background: #D3D3D3;
     height: 100%;
-    width: 58%;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
+    width: 45%;
     display: flex;
-    -webkit-align-self: flex-start;
-    -ms-flex-item-align: start;
-    align-self: flex-start;
-    margin-left: 11%;
+    align-items:center;
     flex-direction: column;
-    
-    `;
+`;
 
-const AccountSettings = styled.h3`
-
+const AccountSettings = styled.span`
+    color:black;
+    font-size:2.3vh;
+    padding:1vh;
+    margin-top:1vh;
+    margin-bottom:1vh;
 `;
 
 const Wrapper2 = styled.div`
@@ -51,16 +48,7 @@ const ProfileEditableAdvancedSettings = (props) =>{
             gender:props.user.gender,
             lookingFor:props.user.lookingFor,
             localitzation:props.user.localitzation,
-            tastes:[
-                {
-                    name: "poco",
-                    description: "sabe a poco"
-                },
-                {
-                    name: "poco2",
-                    description: "sabe a poco2"
-                }
-            ],
+            tastes:props.user.tastes,
             photos:props.user.photos,
             upper_age_range:props.user.upper_age_range,
             lower_age_range:props.user.lower_age_range
@@ -113,43 +101,67 @@ const ProfileEditableAdvancedSettings = (props) =>{
 
     return(
         <Wrapper>
-            <AccountSettings>Ajustes Avanzados</AccountSettings>
+            <AccountSettings>Ajustes de la cuenta</AccountSettings>
             <Input type={"text"} onChange={(e) => setEmail(e.target.value)} value={email} styles="
                 align-self: center;
-                width: 90%;
+                width: 15vw;
+                height: 5vh;
+                font-size:2vh;
                 overflow: auto;
             "></Input>
             <Input value="Guardar correo" type="submit" onClick ={() => update()} styles="
                 align-self: center;
-                margin-top: auto;
-                width: 93%;
-                margin-bottom: 5%;
+                margin-top:1vh;
+                border-radius: 0.3vh;
+                width: 15vw;
+                font-size:2.2vh;
+                height: 5vh;
+                cursor:pointer;
+                background-color: #20bf55;
+                background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
+                color:white;
             "></Input> 
             <Wrapper2>
                 <Input type={"text"} onChange={(e) => setPasswd(e.target.value)} value={passwd} placeholder="Password" styles="
                     align-self: center;
-                    width: 90%;
+                    width: 15vw;
+                    height: 5vh;
+                    font-size:2vh;
                     overflow: auto;
                 "></Input>
 
                 <Input type={"text"} onChange={(e) => setPasswd2(e.target.value)} value={passwd2} placeholder="Repeat Password" styles="
                     margin-top: 2%;
                     align-self: center;
-                    width: 90%;
+                    width: 15vw;
+                    font-size:2vh;
+                    height: 5vh;
                     overflow: auto;
                 "></Input>
                 <Input value="Guardar contraseña" type="submit" onClick ={() => newpasswd()} styles="
                     align-self: center;
-                    margin-top: auto;
-                    width: 93%;
-                    margin-bottom: 5%;
+                    margin-top: 1vh;
+                    border-radius: 0.3vh;
+                    width: 15vw;
+                    font-size:2.2vh;
+                    height: 5vh;
+                    cursor:pointer;
+                    background-color: #20bf55;
+                    background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
+                    color:white;
                 "></Input> 
             </Wrapper2>  
             <Input value="Borrar Cuenta" type="submit" onClick ={() => deleteuser()} styles="
                 align-self: center;
                 margin-top: auto;
-                width: 93%;
-                margin-bottom: 5%;
+                border-radius:0;
+                width: 100%;
+                height: 5vh;
+                font-size:2.2vh;
+                cursor:pointer;
+                color:white;
+                background-color: #f71735;
+                background-image: linear-gradient(147deg, #f71735 0%, #db3445 74%);
             " 
             ></Input>       
         </Wrapper>

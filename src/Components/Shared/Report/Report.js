@@ -73,7 +73,8 @@ const ColWrapper = styled.div`
 const DivConten = styled.div`
     width: 50vw;
     height: 50vh;
-    background: white;
+    background-color: #f5f5f5;
+    font-size:2vh;      
     display:flex;
     border-radius:2vh;
     flex-direction:column;
@@ -84,7 +85,7 @@ const DivConten = styled.div`
 const Title = styled.h1`
     width: 100%;
     height: 20%;
-    color: black !important;
+    color:#14557b;
 `;
 
 const DivRow = styled.div`
@@ -98,8 +99,8 @@ const DivRow = styled.div`
 const PopUp = styled.div`
     ${props=>`
         display:flex;
-        flex-direction:column;
-        background-color: rgba(128,128,128,1);
+        flex-direction:row;
+        background-color: transparent;
         display:${props.pop ? 'flex' : 'none'};
         ${props?.stylos}
 `}`;
@@ -107,13 +108,29 @@ const PopUp = styled.div`
 const Button = styled.button`
     ${props=>`
         width:100%;
-        height:50%;
         justify-content:center;
         align-items:center;
         text-align:center;
         font-size: calc(0.2px + 2vmin);
-        ${props?.styles}
+        margin-right: 0.5vh;
+        width:7vw;
+        height: 3.5vh;
+        color:white;
+        border:none;
+        border-radius:0.2vh;
+        background-color: #20bf55;
+        background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
+        cursor:pointer;
+        ${props?.styles};
+        ${props.active? "display:flex" : "display:none"};
 `}`;
+
+const HoverWrapper = styled.div`
+  &:hover ${Button} {
+    box-shadow 0 0 2vh #01baef;
+    text-shadow: 0 0 0.3vh white;
+  }
+`
 
 const Report = (props) => {
     const [modalForm,setModal] = useState(false);
@@ -131,8 +148,8 @@ const Report = (props) => {
     }
 
     const FuncSelect = () => {
-        if(!prop) setProp(true);
-        if(prop) setProp(false);
+        console.log(props.oldScreen)
+        setProp(!prop);
     }
 
     const FuncUser = () => {
@@ -143,67 +160,67 @@ const Report = (props) => {
     return (
         <Wrapper styles={props.styles}>
             <Wrapper2 modal={modalForm}>
-                    <DivConten>
-                        <Title>Reporte de usuario</Title>
+                <DivConten>
+                    <Title>Reporte de usuario</Title>
+                    <ProfileEditableForm
+                        name="form1"
+                        inputs={
+                            [{
+                                label:"Descripción del reporte: ",
+                                name:"descripcion",
+                                type:"text",
+                                styles:"width:100%; height:100%"
+                            }
+                        ]
+                        }
+                        styles="width:95%; height:20vh;"
+                    />
+                    <DivRow>
                         <ProfileEditableForm
                             name="form1"
                             inputs={
-                                [{
-                                    label:"Descripción del reporte: ",
-                                    name:"descripcion",
-                                    type:"text",
-                                    styles:"width:100%; height:100%"
+                                [
+                                {
+                                    label:"Reportar",
+                                    name:"submit",
+                                    type:"submit",
+                                    fun: () => {
+                                        const response = props.db.collection("perfiles");
+                                        response.get().then(snapshot => {
+                                            snapshot.forEach((doc) => {
+                                                if(doc.data().correo == props.usermatch.email){
+                                                    let karma = {
+                                                        karma:doc.data().karma-1
+                                                    }
+                                                    props.db.collection("perfiles").doc(props.usermatch.userId).update(karma);
+                                                }
+                                            })
+                                        });
+                                        FuncReport();
+                                    }
                                 }
                             ]
                             }
-                            styles="width:95%; height:20vh;"
+                            styles="width:25%; height:20vh;"
                         />
-                        <DivRow>
-                            <ProfileEditableForm
-                                name="form1"
-                                inputs={
-                                    [
-                                    {
-                                        label:"Reportar",
-                                        name:"submit",
-                                        type:"submit",
-                                        fun: () => {
-                                            const response = props.db.collection("perfiles");
-                                            response.get().then(snapshot => {
-                                                snapshot.forEach((doc) => {
-                                                    if(doc.data().correo == props.usermatch.email){
-                                                        let karma = {
-                                                            karma:doc.data().karma-1
-                                                        }
-                                                        props.db.collection("perfiles").doc(props.usermatch.userId).update(karma);
-                                                    }
-                                                })
-                                            });
-                                            FuncReport();
-                                        }
+                        <ProfileEditableForm
+                            name="form1"
+                            inputs={
+                                [
+                                {
+                                    label:"Cerrar",
+                                    name:"close",
+                                    type:"submit",
+                                    fun: () => {
+                                        FuncReport();
                                     }
-                                ]
                                 }
-                                styles="width:25%; height:20vh;"
-                            />
-                            <ProfileEditableForm
-                                name="form1"
-                                inputs={
-                                    [
-                                    {
-                                        label:"Cerrar",
-                                        name:"close",
-                                        type:"submit",
-                                        fun: () => {
-                                            FuncReport();
-                                        }
-                                    }
-                                ]
-                                }
-                                styles="width:30%; height:20vh;"
-                            />
-                        </DivRow>
-                    </DivConten>
+                            ]
+                            }
+                            styles="width:30%; height:20vh;"
+                        />
+                    </DivRow>
+                </DivConten>
             </Wrapper2>
             <Wrapper2_2 matchoff={matchoff}>
                 <DivConten>
@@ -249,6 +266,7 @@ const Report = (props) => {
                                                 }
                                                 
                                                 props.db.collection("perfiles/"+props.usermatch.userId+"/match_list").doc(doc.id).update(useroff);
+                                                props.setScreen("match");
                                             })
                                         });
                                         FuncMatch();
@@ -281,8 +299,12 @@ const Report = (props) => {
                 <ColWrapper>
                     <PopUp pop={prop} stylos={props.stylos}>
                         {FuncUser}
-                        <Button onClick={() => FuncReport()}>Report</Button>
-                        {props.isUser ? null : <Button onClick={() => FuncMatch()}>MatchOff</Button>}
+                        <HoverWrapper>
+                            <Button active={true} onClick={() => FuncReport()}>Report</Button>
+                        </HoverWrapper>
+                        <HoverWrapper>
+                            {props.isUser ? null : <Button active={(props.oldScreen === "chat" || props.active)} onClick={() => FuncMatch()}>MatchOff</Button>}
+                        </HoverWrapper>
                     </PopUp>
                 </ColWrapper>
                 <ColWrapper>

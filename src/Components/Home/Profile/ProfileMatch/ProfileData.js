@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components";
+import Match from "../../Match/Match";
 
 const Wrapper = styled.div`
   ${props =>`
@@ -44,31 +45,46 @@ const InputWrapper = styled.div`
 `}`
 
 const InputData = styled.input`
-    border:none;
-    font-size:2vh;
-    text-align:right;
-    width:inherit;
-    color:white;
-    background-color:transparent;
-    outline:none;
-`
+    ${props =>`
+        border:none;
+        font-size:2vh;
+        text-align:right;
+        width:inherit;
+        color:white;
+        background-color:transparent;
+        outline:none;
+        ${props?.styles}
+`}`
 
 const TasteDivisor = styled.div`
     background-color: #70b2d9;
     background-image: linear-gradient(315deg, #70b2d9 0%, #39e5b6 74%);      
     width: 95%;
     height:3px;
+    color:black;
+`
+
+const InfoText = styled.span`
+    color:black;
     margin-top:10%;
+    width:95%;
+    text-align:left;
+
+    font-size: 3vh;
+    background-image: linear-gradient(315deg, #70b2d9 0%, #39e5b6 74%);   
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 `
 
 const ProfileData = (props) => {
-    console.log(props)
+    const fecha = Math.round((new Date().getTime()/1000 - props.userMatch.recent/1000) / 60);
+    const fechaUsuario = fecha >= 60 ? ( (fecha / 60) / 24) >= 1 ? "hace " + Math.round(fecha / 24) + " dia/s." : "hace " + Math.round(fecha / 60) + " hora/s." : fecha <= 5 ? "recientemente." : "hace " + fecha + " minuto/s.";
     const loadTastes = (userTastes) => {
         let views = [];
         userTastes.forEach(taste => {
             views.push(
                 <InputWrapper styles={"width:20%;margin-left:1%;justify-content:space-between;margin-top:0;"}>
-                    {taste.name}
+                    {taste}
                 </InputWrapper>
             )
         })
@@ -95,18 +111,21 @@ const ProfileData = (props) => {
                     </InputWrapper>
                 </InputWrapper>
 
-                <InputWrapper styles={"justify-content:space-between;"}>
-                    Estado
-                    <InputData value={props.userMatch.estado} readOnly={true}/>
+                <InputWrapper>
+                    <InputData styles={"text-align:left;"} value={"Ultima vez visto en la App: " + fechaUsuario} readOnly={true}/>
                 </InputWrapper>
 
                 <InputWrapper styles={"justify-content:space-between; height:160px; align-items:baseline;"}>
                     Descripcion
                     <InputData value={props.userMatch.description} readOnly={true}/>
                 </InputWrapper>
+                
+                <InfoText>Gustos</InfoText>
+                <TasteDivisor>
+                </TasteDivisor>
 
-                <TasteDivisor/>
                 <InputWrapper styles={"background-color:transparent; background-image:none; border:none"}>
+                    {console.log(props.userMatch),console.log("---aw----")}
                     {loadTastes(props.userMatch.tastes)}
                 </InputWrapper>
             </WrapperOverflow>
