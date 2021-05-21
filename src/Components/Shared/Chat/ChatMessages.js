@@ -3,6 +3,7 @@ import styled from "styled-components";
 import "firebase/firestore";
 
 import chatBackground from "../../../Assets/Images/chat_background.png";
+import playIcon from "../../../Assets/Images/Icons/play_icon.png";
 
 const Wrapper = styled.div`
   ${props=>`
@@ -42,14 +43,27 @@ const Message = styled.span`
         box-sizing: border-box;
         border: 0.1vh solid black;
         width:fit-content;
-        max-width:95%;
         padding: 1%;
         font-size:1.7vh;
         ${(props.messageUserId === props.userId) ? "margin-right:1%" : "margin-left:1%"};
         ${(props.type === "image") ? "background:url("+ props.message +") no-repeat center; background-size: 100% auto;width: 10vw; height: 10vw; cursor: pointer;" : ""};
-        ${(props.type === "game") ? "width: 95.5%; height: 10vh; align-items:center; justify-content:center; cursor: pointer;" : ""};
+        ${(props.type === "game") ? "width: 98%; height: 10vh; align-items:center; background-color #20bf55; background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%); justify-content:center; cursor: pointer; border:none; color:white; font-size: 2.2vh; " : ""};
         ${(props.resize.expand && props.resize.messageId === props.messageId) ? "max-width:100%; padding:0; margin:0; width: 100%; height: 100%; position:absolute; top:0; left:0; background-size: auto; background-color:rgba(0,0,0,0.5)" : " "};
 `}`
+
+const GameNameWrapper = styled.span`
+    font-weight:bold;
+    margin-left:2vh;
+    border: 0.1vh solid white;
+    padding: 1vh;
+    border-radius: 0.7vh;
+`
+
+const PlayMessage = styled.img`
+    width: 2.3vw;
+    height: 4.5vh;
+    margin-left:2vh;
+`;
 
 const MessageEnd = styled.div`
     width:1vh;
@@ -113,7 +127,7 @@ const ChatMessages = (props) => {
         <Wrapper background={chatBackground} styles={props.styles} active={props.active}>
             { props.chatMessages && props.chatMessages.map(message=>{
                 return(
-                    <MessageWrapper messageUserId={message.id_perfil} userId={props.user.userId}>
+                    <MessageWrapper messageUserId={message.id_perfil} userId={props.user.userId} type={message.type}>
                         <Message 
                             resize={resize}
                             message={message.message}
@@ -121,8 +135,12 @@ const ChatMessages = (props) => {
                             type={message.type} 
                             messageUserId={message.id_perfil} 
                             userId={props.user.userId}
-                            onClick={() => { generateResponse(message.type, message.message, message.id, resize, setResize) }}>
-                            {(message.type === "text") ? message.message : (message.type === "game") ? "HA SOLICITADO JUGAR A " + JSON.parse(message.message).name + "": ""}
+                            onClick={() => { generateResponse(message.type, message.message, message.id, resize, setResize) }}
+                        >
+                            {(message.type === "text") ? message.message : ""}
+                            {(message.type === "game") ? "INVITACION A JUGAR A" : null}
+                            {(message.type === "game") ? <GameNameWrapper> {JSON.parse(message.message).name} </GameNameWrapper> : null}
+                            {(message.type === "game") ? <PlayMessage src={playIcon} alt={"game message"} /> : null}
                         </Message>
                         
                     </MessageWrapper>

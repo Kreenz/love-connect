@@ -42,18 +42,20 @@ const ButtonMessageWrapper = styled.div`
 `
 
 const ButtonWrapper = styled.div`
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background-color #20bf55;
-    background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
-    border-radius:0.3vh;
-`
+    ${props =>`
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background-color #20bf55;
+        background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
+        border-radius:0.3vh;
+        ${props.styles}    
+`}`
 
 const ButtonPhotoUploader = styled.button`
     ${props =>`
-        width: 2vw;
-        height: 4vh;
+        width: 2.3vw;
+        height: 4.5vh;
         border:none;
         cursor:pointer;
         color: white;
@@ -73,8 +75,8 @@ const HiddenFileInput = styled.input`
 
 const ButtonMessageSender = styled.button`
     ${props=>`
-        width: 4vw;
-        height: 4vh;
+        width: 4.5vw;
+        height: 4.5vh;
         border:none;
         cursor:pointer;
         color: white;
@@ -91,7 +93,6 @@ const HoverWrapper = styled.div`
     display:flex;
     align-items:center;
     justify-content:center;
-    width:50%;
     height:100%;
     &:hover ${ButtonMessageSender} {
         box-shadow 0 0 2vh #01baef;
@@ -147,7 +148,7 @@ const ChatTextSender = (props) => {
 
                 <HiddenFileInput type="file"/>
                 <HoverWrapper>
-                    <ButtonWrapper>
+                    <ButtonWrapper styles={"margin-left:1vh;"}>
                         <ButtonMessageSender background={sendIcon} onClick={() => { sendMessage(message, "text"); setMessage("")}}>
                         </ButtonMessageSender>   
                     </ButtonWrapper>
