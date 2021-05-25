@@ -146,18 +146,6 @@ const MatchMenu = (props) => {
                     match: match
                 })
 
-                props.db
-                .collection("matches/" + id_chat + "/messages")
-                .doc()
-                .set(
-                    {
-                        fecha: new Date().getTime(),
-                        id_perfil:"",
-                        message:"Este es el inicio de tu conversacion!",
-                        type:"text"
-                    }
-                )
-
                 nextUser();
             }
 

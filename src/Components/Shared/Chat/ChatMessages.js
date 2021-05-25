@@ -28,9 +28,10 @@ const MessageWrapper = styled.div`
         display:flex;
         flex-direction:column;
         width:100%;
-        height:auto;
-        margin-top:1%;
+        height:fit-content;
+        margin-bottom:1.5%;
         align-items: ${props.messageUserId === props.userId ? "flex-end" : "flex-start"};
+        justify-content:center;
 `}`
 
 const Message = styled.span`
@@ -40,14 +41,14 @@ const Message = styled.span`
         flex-wrap:wrap;
         background: ${(props.messageUserId === props.userId) ? "lightgreen" : "white"};
         border-radius:0.5vh;
-        box-sizing: border-box;
-        border: 0.1vh solid black;
+        box-shadow: 0 0 0.2vh black;
         width:fit-content;
-        padding: 1%;
-        font-size:1.7vh;
+        max-width: 94%;
+        padding: 1.5%;
+        font-size:1.5vh;
         ${(props.messageUserId === props.userId) ? "margin-right:1%" : "margin-left:1%"};
         ${(props.type === "image") ? "background:url("+ props.message +") no-repeat center; background-size: 100% auto;width: 10vw; height: 10vw; cursor: pointer;" : ""};
-        ${(props.type === "game") ? "width: 98%; height: 10vh; align-items:center; background-color #20bf55; background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%); justify-content:center; cursor: pointer; border:none; color:white; font-size: 2.2vh; " : ""};
+        ${(props.type === "game") ? "width: 94%; height: 10vh; align-items:center; background-color #20bf55; background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%); justify-content:center; cursor: pointer; border:none; color:white; font-size: 2.2vh; " : ""};
         ${(props.resize.expand && props.resize.messageId === props.messageId) ? "max-width:100%; padding:0; margin:0; width: 100%; height: 100%; position:absolute; top:0; left:0; background-size: auto; background-color:rgba(0,0,0,0.5)" : " "};
 `}`
 
@@ -66,8 +67,8 @@ const PlayMessage = styled.img`
 `;
 
 const MessageEnd = styled.div`
-    width:1vh;
-    height:5vh;
+    min-width:0.5vh;
+    min-height:0.5vh;
 `
 
 const ChatMessages = (props) => {
@@ -128,7 +129,7 @@ const ChatMessages = (props) => {
         <Wrapper background={chatBackground} styles={props.styles} active={props.active}>
             { props.chatMessages && props.chatMessages.map(message=>{
                 return(
-                    <MessageWrapper messageUserId={message.id_perfil} userId={props.user.userId} type={message.type}>
+                    <MessageWrapper type={message.type} messageUserId={message.id_perfil} userId={props.user.userId} type={message.type}>
                         <Message 
                             resize={resize}
                             message={message.message}

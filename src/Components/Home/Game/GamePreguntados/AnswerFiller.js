@@ -56,6 +56,7 @@ const AnswerInput = styled.textarea`
     ${props =>`
         resize:none;
         width: 28.8vw;
+        height: 13vh;
         font-size:2vh;
         padding: 2%;
         border-radius:1vh;
