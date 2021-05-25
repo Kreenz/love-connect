@@ -64,10 +64,14 @@ const Wrapper2_2 = styled.div`
 `}`;
 
 const ColWrapper = styled.div`
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+    ${props => `
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        ${props.styles}
+    `}
+
 `
 
 const DivConten = styled.div`
@@ -137,24 +141,8 @@ const Report = (props) => {
     const [matchoff,setMatch] = useState(false);
     const [prop,setProp] = useState(false);
 
-    const FuncReport = () => {
-        if(!modalForm) setModal(true);
-        if(modalForm) setModal(false);
-    }
-
-    const FuncMatch = () => {
-        if(!matchoff) setMatch(true);
-        if(matchoff) setMatch(false);
-    }
-
-    const FuncSelect = () => {
-        console.log(props.oldScreen)
-        setProp(!prop);
-    }
-
     const FuncUser = () => {
-        if(props.isUser) props.setIsUser(false);
-        else{props.setIsUser(true);}
+        props.setIsUser(!props.isUser)
     }
 
     return (
@@ -196,7 +184,7 @@ const Report = (props) => {
                                                 }
                                             })
                                         });
-                                        FuncReport();
+                                        setModal(!modalForm);;
                                     }
                                 }
                             ]
@@ -212,7 +200,7 @@ const Report = (props) => {
                                     name:"close",
                                     type:"submit",
                                     fun: () => {
-                                        FuncReport();
+                                        setModal(!modalForm);;
                                     }
                                 }
                             ]
@@ -269,7 +257,7 @@ const Report = (props) => {
                                                 props.setScreen("match");
                                             })
                                         });
-                                        FuncMatch();
+                                        setMatch(!matchoff);
                                     }
                                 }
                             ]
@@ -285,7 +273,7 @@ const Report = (props) => {
                                     name:"close",
                                     type:"submit",
                                     fun: () => {
-                                        FuncMatch();
+                                        setMatch(!matchoff);
                                     }
                                 }
                             ]
@@ -295,19 +283,19 @@ const Report = (props) => {
                     </DivRow>
                 </DivConten>
             </Wrapper2_2>
-            <Wrapper styles={props.styles + ";display:flex; flex-direction:row;"} onClick={() => {FuncSelect()}}>
+            <Wrapper styles={props.styles + ";display:flex; flex-direction:row;"} onClick={() => {setProp(!prop)}}>
                 <ColWrapper>
                     <PopUp pop={prop} stylos={props.stylos}>
                         {FuncUser}
                         <HoverWrapper>
-                            <Button active={true} onClick={() => FuncReport()}>Report</Button>
+                            <Button active={true} onClick={() => setModal(!modalForm)}>Report</Button>
                         </HoverWrapper>
                         <HoverWrapper>
-                            {props.isUser ? null : <Button active={(props.oldScreen === "chat" || props.active)} onClick={() => FuncMatch()}>MatchOff</Button>}
+                            {props.isUser ? null : <Button active={(props.oldScreen === "chat" || props.active)} onClick={() => setMatch(!matchoff)}>MatchOff</Button>}
                         </HoverWrapper>
                     </PopUp>
                 </ColWrapper>
-                <ColWrapper>
+                <ColWrapper styles={"margin-rigth:3%;"}>
                     <Reports/>
                     <Reports/>
                     <Reports/>

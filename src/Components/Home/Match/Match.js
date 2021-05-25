@@ -138,7 +138,7 @@ const Match = (props) => {
                     {/* {console.log(props.nextUserMatchList[0]?.[1])}
                     {console.log(props.userMatch)} */}
                     <Report 
-                      styles={"padding-top:0.5vh; padding-right:0.5vw; position:absolute; top:8%; left:81%; height:unset; width:1vw; flex-direction:column; justify-content:flex-end;align-items:flex-end;"}
+                      styles={"margin-right:5%; margin-bottom:1%;margin-top:2%;"}
                       stylos="top:13%; justify-content:center; align-items:center; width:100%;"
                       isUser={isUser} 
                       setIsUser={setIsUser} 
