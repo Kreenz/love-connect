@@ -6,6 +6,8 @@ const Wrapper = styled.div`
     ${props=>`
         background: url("${props.foto}") no-repeat center;
         background-size: cover;
+        box-shadow: 0 0 0.3vh black;
+        border-radius:0.5vh;
         height: 8vw;
         width: 6vw;
         margin-top: 2vh;

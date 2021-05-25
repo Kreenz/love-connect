@@ -18,6 +18,7 @@ const MatchPerson = (props) =>{
         userId: null
     })
 
+
     const searchUserMatch = (userMatchCheck, setUserMatchApp, screen, setScreen, setChatMessages) => {
         if(userMatchCheck.userId === userMatch.userId && screen === "chat") setScreen("match");
         else {
@@ -28,15 +29,14 @@ const MatchPerson = (props) =>{
             .then(doc => {
                 //Lo mismo que en home
                 //let photos = JSON.parse(doc.data().fotos);
-                let photos = ["", ""]
+                console.log(props.userMatch)
                 props.db
                 .collection("perfiles/" + props.userId + "/match_list")
                 .where("id_perfil", "==", props.userMatchId)
                 .get()
                 .then( user => {
                     user.forEach(docUser => {
-                        console.log("-------ta mal-------")
-                        console.log(doc.data().tastes)
+                        let photos = JSON.parse(doc.data().fotos);
                         let userMatch = {
                             userId: doc.id,
                             username: doc.data().nombre,
@@ -48,7 +48,7 @@ const MatchPerson = (props) =>{
                             lookingFor: doc.data().busca,
                             id_chat: docUser.data().id_chat,
                             tastes:doc.data().tastes,
-                            photos:photos,
+                            photos: photos,
                             localitzation:{lat: doc.data().posicion._lat, long: doc.data().posicion._long},
                             upper_age_range:doc.data().rango_edad_mayor,
                             lower_age_range:doc.data().rango_edad_menor,
@@ -78,7 +78,7 @@ const MatchPerson = (props) =>{
             .then(doc => {
                 //Lo mismo que en home
                 //let photos = JSON.parse(doc.data().fotos);
-                let photos = ["", ""];
+                let photos = JSON.parse(doc.data().fotos);
                 props.db
                 .collection("perfiles/" + props.userId + "/match_list")
                 .where("id_perfil", "==", props.userMatchId)

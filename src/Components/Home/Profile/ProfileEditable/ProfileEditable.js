@@ -5,9 +5,6 @@ import ProfileEditableForm from "./ProfileEditableForm/ProfileEditableForm";
 import ProfileEditablePhoto from "./ProfileEditablePhoto/ProfileEditablePhoto";
 import ProfileEditablePhotoButton from "./ProfileEditableButtons/ProfileEditablePhotoButton";
 
-import ProfileEditableTastesButton from "./ProfileEditableButtons/ProfileEditableTastesButton";
-import ProfileEditableTastes from "./ProfileEditableTastes/ProfileEditableTastes";
-
 import Input from '../../../Shared/Formulario/Input';
 
 //npm install nouislider-react
@@ -78,29 +75,71 @@ const WrapperForm2_2 = styled.div`
 
 
 const WrapperTastes = styled.div`
-    height: 20%;
-    width: 100%;
+    height: 17vh;
+    min-height: 17vh;
+    overflow-y: auto;
+    align-items: center;
+    width: 90%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-left:10%;
 `;
 
-/* const WrapperTastesEdit = styled.div`
-    height: 20%;
-    width: 20%;
-    background: white;
+const WrapperTastesEdit = styled.button`
+    height: 15%;
+    width: 30%;
+    background: red;
     margin-left: 1vw;
-    margin-top: 1vw;
+    margin-right: 0.3vw;
     outline: none;
     border: none;
     border-radius: 1vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
-`; */
+`;
+
+const WrapperDIVTastes = styled.div`
+    height: 30%;
+    width: 30%;
+    outline: none;
+    border: none;
+    border-radius: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+`;
+
+const TastesSectionWrapper = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    width:100%;
+`
+
+const TastesTitle = styled.span`
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    width:82%;
+    margin-left:9%;
+    border-bottom: 0.4vh solid white;
+    padding-bottom: 1vh;
+    margin-bottom:2vh;
+`;
 
 
 const ProfileEditable = (props) => {
+    const [username, setUsername] = useState(props.user.username);
+    const [description, setDescription] = useState(props.user.description);
+    const [lookingFor, setLookingFor] = useState(props.user.lookingFor);
+    const [distance, setDistance] = useState(props.user.distance);
+    const [upper_age_range, setUpper_age_range] = useState(props.user.upper_age_range);
+    const [lower_age_range, setLower_age_range] = useState(props.user.lower_age_range);
+    const [tastes, setTastes] = useState(props.user.tastes);
     const [profileUser, setProfileUser] = useState({
         userId: null,
         username: "Pablo",
@@ -125,53 +164,6 @@ const ProfileEditable = (props) => {
         upper_age_range:2,
         lower_age_range:2
     })
-
-    useEffect(() => {
-        /* console.log(props); */
-        //console.log(props.db.collection("perfiles"));
-        //buscas en la base de datos el usuario en base al userId que te pasan por los props
-        /* if(props.db.collection("perfiles").where("uid", "==", props.user.uid)){
-            console.log(props.user.uid)
-        } */
-        document.getElementsByName("busca")[0].value = lookingFor;
-        let currentUser = {
-            userId: props.user.userId,
-            username: username,
-            description: description,
-            email:props.user.email,
-            age:props.user.age,
-            distance:distance,
-            recent:props.user.recent,
-            gender:props.user.gender,
-            lookingFor:lookingFor,
-            tastes:props.user.tastes,
-            photos:props.photos,
-            upper_age_range:upper_age_range,
-            lower_age_range:lower_age_range
-        }
-        if(profileUser.userId == null) setProfileUser(currentUser);
-    });
-
-    const [username, setUsername] = useState(props.user.username);
-    const [description, setDescription] = useState(props.user.description);
-    const [lookingFor, setLookingFor] = useState(props.user.lookingFor);
-    const [distance, setDistance] = useState(props.user.distance);
-    const [upper_age_range, setUpper_age_range] = useState(props.user.upper_age_range);
-    const [lower_age_range, setLower_age_range] = useState(props.user.lower_age_range);
-    const [tastes, setTastes] = useState(props.user.tastes);
-
-    const Save = () => {
-        let updates = {
-            nombre:username,
-            descripcion:description,
-            busca:lookingFor,
-            distancia:distance,
-            rango_edad_mayor:upper_age_range,
-            rango_edad_menor:lower_age_range,
-            tastes:tastes
-        }
-        props.db.collection("perfiles").doc(props.user.userId).update(updates);
-    }
 
     const SaveJS = () => {
         let currentUser = {
@@ -221,36 +213,86 @@ const ProfileEditable = (props) => {
         
         tastes.forEach(taste => {
             components.push(
-                <Input type={"text"} name={"tast"} value={taste} styles="
-                    border: none;
-                    border-radius: 0.5vh;
-                    width: 10vw;
-                    height: 6vh;
-                    text-align: center;
-                    align-items: center;
-                    font-size: 2.5vh;
-                    color: black;
-                "
-                onChange={(e) => {
-                    let newTaste = [];
-                    let form = document.getElementsByName("tast");
-                    console.log("inputs");
-                    console.log(form[0]);
-                    form.forEach(tast => {
-                        if(tast.value != null || tast.value != ""){
+                <WrapperDIVTastes>
+                    <Input type={"text"} name={"tast"} value={taste} styles="
+                        border: none;
+                        border-radius: 3vh;
+                        width: 8vw;
+                        height: 4vh;
+                        text-align: center;
+                        align-items: center;
+                        font-size: 2vh;
+                        color: black;
+                    "
+                    onChange={(e) => {
+                        let newTaste = [];
+                        let form = document.getElementsByName("tast");
+                        console.log("inputs");
+                        console.log(form[0]);
+                        form.forEach(tast => {
                             if(tast.value != e.target.value){
                                 newTaste.push(tast.value);
                             }
                             else {newTaste.push(e.target.value);}
-                        }
-                    })
-                    setTastes(newTaste)
-                }}/>      
+                        })
+                        setTastes(newTaste)
+                    }}/>
+                    <WrapperTastesEdit name={taste} 
+                    onClick={(e) => {
+                        let newTaste = [];
+                        tastes.forEach(tast => {
+                            if(tast != e.target.name){
+                                newTaste.push(tast);
+                            }
+                        })
+                        setTastes(newTaste);
+                        SaveJS();
+                    }}/>
+                </WrapperDIVTastes>
             )
         });
 
         return components; 
     }
+
+    const Save = () => {
+        let updates = {
+            nombre:username,
+            descripcion:description,
+            busca:lookingFor,
+            distancia:distance,
+            rango_edad_mayor:upper_age_range,
+            rango_edad_menor:lower_age_range,
+            tastes:tastes
+        }
+        props.db.collection("perfiles").doc(props.user.userId).update(updates);
+    }
+
+    useEffect(() => {
+        /* console.log(props); */
+        //console.log(props.db.collection("perfiles"));
+        //buscas en la base de datos el usuario en base al userId que te pasan por los props
+        /* if(props.db.collection("perfiles").where("uid", "==", props.user.uid)){
+            console.log(props.user.uid)
+        } */
+        document.getElementsByName("busca")[0].value = lookingFor;
+        let currentUser = {
+            userId: props.user.userId,
+            username: username,
+            description: description,
+            email:props.user.email,
+            age:props.user.age,
+            distance:distance,
+            recent:props.user.recent,
+            gender:props.user.gender,
+            lookingFor:lookingFor,
+            tastes:props.user.tastes,
+            photos:props.photos,
+            upper_age_range:upper_age_range,
+            lower_age_range:lower_age_range
+        }
+        if(profileUser.userId == null) setProfileUser(currentUser);
+    });
 
     return (
         <Wrapper>
@@ -277,7 +319,7 @@ const ProfileEditable = (props) => {
                             type:"text",
                             value:username,
                             onChange:(e) => setUsername(e.target.value),
-                            styles:"width:100%;"
+                            styles:"width:100%;font-size:2.2vh;"
                         },
                         {
                             label:"Descripción: ",
@@ -285,7 +327,7 @@ const ProfileEditable = (props) => {
                             type:"text",
                             value:description,
                             onChange:(e) => setDescription(e.target.value),
-                            styles:"width:100%;"
+                            styles:"width:100%;font-size:2.2vh;"
                         }]
                     }
                     styles="width:35vw;"
@@ -303,7 +345,7 @@ const ProfileEditable = (props) => {
                             options:["chico", "chica", "no binario"],
                             typegen:lookingFor,
                             onChange:(e) => setLookingFor(e.target.value),
-                            styles:"width:100%;"
+                            styles:"width:100%; font-size:2.2vh;"
                         }]
                     }
                     styles={"width:10vw; height:10vh;align-items:center;"}
@@ -352,7 +394,7 @@ const ProfileEditable = (props) => {
                                     /* console.log(parseInt(pe.getAttribute("aria-valuetext"))) */
                                     setUpper_age_range(parseInt(pe2.getAttribute("aria-valuetext")));
                                 },
-                                styles:"width:6vw; align-items:center;"
+                                styles:"width:6vw; align-items:center;font-size:2.2vh;"
                             }]
                         }
                     />
@@ -370,30 +412,39 @@ const ProfileEditable = (props) => {
                             Save();
                             SaveJS();
                         },
-                        styles:"width:20%;"
+                        styles:"width:20%;font-size:2.2vh;"
                     }]
                 }
-                styles="height:10%; align-items:center; width:20vw;"
+                styles="height:10%; align-items:center;"
             />
-            
-            <WrapperTastes>
-                {console.log(tastes)}
-                {loadTastes()}
-                <Input type={"submit"} name={"tastes"} value={"Añadir"} styles="
-                    border: none;
-                    border-radius: 0.5vh;
-                    width: 10vw;
-                    height: 6vh;
-                    text-align: center;
-                    align-items: center;
-                    font-size: 2.5vh;
-                    background-color: #20bf55;
-                    background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
-                    transition: box-shadow 0.2s ease-in;
-                    color: white;
-                "
-                onClick={() => {add();SaveJS();}}/>
-            </WrapperTastes>
+
+            <TastesSectionWrapper>
+                <TastesTitle>
+                    Gustos
+                </TastesTitle>
+                <WrapperTastes>
+                    {console.log(tastes)}
+                    {loadTastes()}
+                    <Input type={"submit"} name={"tastes"} value={"Añadir"} styles="
+                        border: none;
+                        border-radius: 0.5vh;
+                        display:flex;
+                        align-items:center;
+                        width: 6vw;
+                        height: 4vh;
+                        text-align: center;
+                        align-items: center;
+                        font-size: 2vh;
+                        background-color: #20bf55;
+                        background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
+                        cursor:pointer;
+                        transition: box-shadow 0.2s ease-in;
+                        color: white;
+                        margin-left:2vh;
+                    "
+                    onClick={() => {add();SaveJS();}}/>
+                </WrapperTastes>
+            </TastesSectionWrapper>
         </Wrapper>
     );
 };

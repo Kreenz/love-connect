@@ -19,18 +19,20 @@ const Wrapper = styled.div`
         align-items: center;
         margin:1%;
         ${props?.styles}
-`}`
+`}`;
 
 const MessageArea = styled.input`
-    width: 79%;
-    padding: 1%;
-    height: 50%;
-    max-height:5.2vh;
-    font-size:2vh;
-    border:none;
-    background: white;
-    border-radius:0.3vh;
-`
+    ${props=>`
+        width: 79%;
+        padding: 1%;
+        height: 50%;
+        max-height:5.2vh;
+        font-size:2vh;
+        border:none;
+        background: white;
+        border-radius:0.3vh;
+        ${props?.styles}
+`}`;
 
 const ButtonMessageWrapper = styled.div`
     display:flex;
@@ -39,7 +41,7 @@ const ButtonMessageWrapper = styled.div`
     justify-content:center;
     width:19%;
     height:100%;
-`
+`;
 
 const ButtonWrapper = styled.div`
     ${props =>`
@@ -50,7 +52,7 @@ const ButtonWrapper = styled.div`
         background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%);
         border-radius:0.3vh;
         ${props.styles}    
-`}`
+`}`;
 
 const ButtonPhotoUploader = styled.button`
     ${props =>`
@@ -67,11 +69,11 @@ const ButtonPhotoUploader = styled.button`
         border-radius:0.3vh;
         font-size:1.6vh;
         
-`}`
+`}`;
 
 const HiddenFileInput = styled.input`
     display:none;
-`
+`;
 
 const ButtonMessageSender = styled.button`
     ${props=>`
@@ -87,7 +89,7 @@ const ButtonMessageSender = styled.button`
         transition: box-shadow 0.2s ease-in;
         border-radius:0.3vh;
         font-size:1.6vh;
-`}`
+`}`;
 
 const HoverWrapper = styled.div`
     display:flex;
@@ -103,31 +105,30 @@ const HoverWrapper = styled.div`
         box-shadow 0 0 2vh #01baef;
         text-shadow: 0 0 0.3vh white;
     }
-`
+`;
 
 const ChatTextSender = (props) => {
     const [message, setMessage] =  useState("");
 
     const sendMessage = (message, type) => {
-        const messages = props.db.collection("matches/" + props.userMatch.id_chat + "/messages").doc();
-        messages.set(
-        {
-            fecha: new Date().getTime(),
-            id_perfil: props.userId,
-            message: message,
-            type: type
-        })
+        message = message.trim();
+        if( !(!message || /^\s*$/.test(message))){
+            const messages = props.db.collection("matches/" + props.userMatch.id_chat + "/messages").doc();
+            messages.set(
+            {
+                fecha: new Date().getTime(),
+                id_perfil: props.userId,
+                message: message,
+                type: type
+            })
+        }
     }
 
     const onEnterMessage = (e) => {
         if(e.key === 'Enter' || e.keyCode === 13){
-            sendMessage(message, "text")
+            sendMessage(message, "text");
             setMessage("")
         } 
-    }
-
-    const loadGameSlider = () => {
-
     }
 
     /* Algo a hacer */
@@ -137,7 +138,7 @@ const ChatTextSender = (props) => {
 
     return (
         <Wrapper styles={props.styles}>
-            <MessageArea placeholder={"Escribe aqui tu mensaje..."} value={message} onKeyUp={ (e) => { onEnterMessage(e) } } onChange={ (e) => { setMessage(e.target.value) }}/>
+            <MessageArea styles={props.bstyle} placeholder={"Escribe aqui tu mensaje..."} value={message} onKeyUp={ (e) => { onEnterMessage(e) } } onChange={ (e) => { setMessage(e.target.value) }}/>
             <ButtonMessageWrapper>
                 <HoverWrapper>
                     <ButtonWrapper>

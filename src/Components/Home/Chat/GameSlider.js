@@ -35,7 +35,6 @@ const GameItem = styled.div`
 const GameSlider = (props) => {
 
     const sendMessage = (message, type) => {
-        console.log(props.userMatch.id_chat, props.user.userId)
         
         const messages = props.db.collection("matches/" + props.userMatch.id_chat + "/messages").doc();
         messages.set(
@@ -48,13 +47,38 @@ const GameSlider = (props) => {
     }
 
     const sendGame = (id_game, name) => {
-        let message = {id_game: id_game, name: name}
-        sendMessage(message, "game");
+        let refMatchGame = props.db
+        .collection("matches/" + props.userMatch.id_chat + "/juegos")
+        .doc();
+
+        let matchGameId = refMatchGame.id;
+
+        props.db
+        .collection("juegos")
+        .doc(id_game)
+        .get()
+        .then(doc => {
+            let game = doc.data().juego;
+            game = game.replace("id_1", props.user.userId);
+            game = game.replace("id_2", props.userMatch.userId);
+            game = JSON.parse(game);
+            refMatchGame.set(
+                {
+                    id_juego: id_game,
+                    estado: "init",
+                    juego: JSON.stringify(game)
+                }
+            )
+    
+            let message = {id_gameMatch: matchGameId, id_game: id_game, name: name}
+            sendMessage(message, "game");
+        })
+
+
     }
 
     const loadGames = () => {
         let views = [];
-        console.log(props.games)
         props.games.forEach(game => {
             views.push(
                 <GameWrapper>

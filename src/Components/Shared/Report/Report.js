@@ -158,7 +158,7 @@ const Report = (props) => {
     }
 
     return (
-        <Wrapper styles={props.styles}>
+        <Wrapper>
             <Wrapper2 modal={modalForm}>
                 <DivConten>
                     <Title>Reporte de usuario</Title>

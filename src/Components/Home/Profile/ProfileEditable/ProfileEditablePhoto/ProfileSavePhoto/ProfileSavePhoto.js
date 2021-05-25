@@ -2,9 +2,21 @@ import React, { useState } from 'react'
 import firebase from "firebase";
 import "firebase/firestore";
 import "firebase/storage";
+import styled from "styled-components";
 
-export default function ModalEmpresa(props) {
-    const [ref, setRef] = useState(null);
+const Wrapper = styled.input`
+    background: url(https://firebasestorage.googleapis.com/v0/b/loveconnect-8fb23.appspot.com/o/Photos%2Fsimbolo.png?alt=media&token=7302f35c-d8b4-459f-a01f-bc218fc31d85) no-repeat center;
+    color:red;
+    width:100%;
+    height:100%;
+    align-items: center;
+    display: flex;
+    justify-content:center;
+    align-self: center;
+`;
+
+
+const ModalEmpresa = (props) => {
     console.log(props)
     const [Imagen, setImagen] = useState();
 
@@ -12,31 +24,29 @@ export default function ModalEmpresa(props) {
     const changeImagen = e => {
         setImagen(e.target.files[0]);
         let storageRef = firebase.storage().ref(props.user.userId);
-
-        storageRef.listAll().then(function(result) {
-            result.items.forEach(function(imageRef) {
-              // And finally display them
-              console.log(imageRef.fullPath);
-            });
-          }).catch(function(error) {
-            alert(error)
-          });
+        uploadImage();
     }
 
     //FUNCION PARA GUARDAR LA IMAGEN EN FIREBASE
     const uploadImage = async () => {
+        console.log(props.user.photos)
         if(props.user.photos.length < 4){
+            let fotos = props.user.photos;
             let storageRef = firebase.storage().ref(props.user.userId+"/"+Imagen.name);
-            storageRef.put(Imagen);
-            console.log(Imagen.name)
-
-
-            storageRef.getDownloadURL().then((url) => {
+            storageRef.put(Imagen)
+            .then(snapshot => snapshot.ref.getDownloadURL()) 
+            .then((url) => {
                 console.log(url);
+                fotos.push(url)    
+                console.log(JSON.stringify(fotos));
+            
+            
                 props.db.collection('perfiles').doc(props.user.userId).update({
-                    fotos: [url]
-                });
+                    fotos: JSON.stringify(fotos)
+                }); 
+                
 
+                console.log(fotos)
                 props.setUser({
                     loggedIn: props.user.loggedIn,
                     userId: props.user.userId,
@@ -47,26 +57,30 @@ export default function ModalEmpresa(props) {
                     recent: props.user.recent,
                     gender:props.user.gender,
                     tastes:props.user.tastes,
-                    photos: [url],
+                    photos: fotos,
                     lookingFor: props.user.lookingFor,
                     upper_age_range: props.user.upper_age_range,
                     lower_age_range: props.user.lower_age_range,
                     description: props.user.description,
                     localitzation:{lat: props.user.localitzation.latitude, long: props.user.localitzation.longitude}
-                })    
-        });
-    }
-    else alert("PHOTO LIMIT ERROR");
+                })
 
+                localStorage.setItem("token", JSON.stringify(props.user));
+            })
+            .catch(console.error);
+
+        } else alert("PHOTO LIMIT ERROR");
     };
+
+
     return (
         <aside id="modal" className="modal">
             <div className="content-modal">
                 <header>
-                    <input type="file" name="imagen"/>
-                    <button >GUARDAR</button>
+                    <Wrapper type="file" name="imagen" onChange={changeImagen} />
                 </header>
             </div>
         </aside>
     )
 }
+export default ModalEmpresa;

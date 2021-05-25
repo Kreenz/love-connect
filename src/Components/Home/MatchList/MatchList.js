@@ -100,7 +100,7 @@ const MatchList = (props) => {
     //console.log(props.userMatch)
     return (
         <Wrapper>
-            <MiniProfile user={props.user} setScreen={props.setScreen} setUserMatch={props.setUserMatch}/>
+            <MiniProfile user={props.user} userMatch={props.userMatch} setScreen={props.setScreen} setUserMatch={props.setUserMatch} screen={props.screen} setOldScreen={props.setOldScreen} oldScreen={props.oldScreen} db={props.db}/>
             <MatchSearcher setSearchText={setSearchText}/>
             <SubMenuWrapper>
                 <WrapperMatches>

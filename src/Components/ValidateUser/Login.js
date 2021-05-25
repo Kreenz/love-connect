@@ -79,37 +79,20 @@ const Login = (props) => {
                         snapshot.forEach((doc) => {
                           /* console.log(doc)
                           console.log(doc.data()) */
-                          //let photos = JSON.parse(doc.data().fotos);
-                          let photos = ["","",""];
-                         /* let arrayPhotos = [];
-                          var pathReference = firebase.storage().ref(doc.id+"/photo_2021-05-12_11-29-49.jpg");
-                          pathReference.getDownloadURL().then((url) => {
-                            console.log(url);
-                            arrayPhotos.push(url);
-                          }).catch((error)=>{
-                            switch (error.code) {
-                              case 'storage/object-not-found':
-                                // File doesn't exist
-                                console.log("File doesn't exist")
-                                break;
-                          
-                              case 'storage/unauthorized':
-                                // User doesn't have permission to access the object 
-                                console.log("User doesn't have permission to access the object ")
-                                break;
-                          
-                              case 'storage/canceled':
-                                console.log("User canceled the upload")
-                                // User canceled the upload
-                                break;
-                          
-                              case 'storage/unknown':
-                                console.log("Unknown error occurred, inspect the server response")
-                                // Unknown error occurred, inspect the server response
-                                break;
-                            }  
+
+                        /*  let storageRef = firebase.storage().ref(doc.id);
+                          storageRef.listAll().then(function(result) {
+                            result.items.forEach(function(imageRef) {
+                              imageRef.getDownloadURL().then((url) => {
+                                photos.push(url);
+                              });
+                            });
+                          }).catch(function(error) {
+                            alert(error)
                           });*/
 
+                          let photos = JSON.parse(doc.data().fotos);
+                          console.log(photos)
                           let user = {
                             loggedIn: true,
                             userId: doc.id,

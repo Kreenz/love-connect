@@ -152,7 +152,7 @@ const Home = (props) => {
                   if(exists.size === 0) {
                     //Fotos de los matches quitados hasta que nos aseguremos que siempre sea una array;
                     //let photos = JSON.parse(doc.data().fotos);
-                    let photos = ["","",""];
+                    let photos = JSON.parse(doc.data().fotos);
                     setNextUserMatchList(oldNextUserMatchList => [...oldNextUserMatchList, [doc.id,{
                       userId: doc.id,
                       username: doc.data().nombre,
@@ -194,6 +194,7 @@ const Home = (props) => {
     photos:[PhotoLogo, "", "", ""]
   })
 
+
   
 
   const loadScreen = () => {
@@ -223,7 +224,22 @@ const Home = (props) => {
           component = <Profile db={props.db} screen={screen} setScreen={setScreen} editable={userMatch.userId === props.user.userId} user={props.user} setUser={props.setUser} oldScreen={oldScreen} setOldScreen={setOldScreen}  userMatch={userMatch}/>
           break;
       case "game":
-          component = <Game db={props.db} setChatMessages={setChatMessages} chatMessages={chatMessages} userMatch={userMatch} user={props.user}/>
+          let chat = <Chat db={props.db} gameMatch={gameMatch} setGameMatch={setGameMatch} setChatMessages={setChatMessages} chatMessages={chatMessages} userMatch={userMatch} setUserMatch={setUserMatch} user={props.user} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen} oldScreen={oldScreen}
+          styles={"display:flex; flex-direction:column; height: 100%; width: 35%;"}
+          styles1={"display:flex; flex-direction:column; align-items:flex-start; height: 90%; width: 100%;"}
+          styles2={"display:flex; flex-direction:column; align-items:flex-start; height:10%; width:100%;"}
+          bstyle={"width: 60%;margin-right: 2vw;"}/>;
+          component = 
+          <Game 
+            db={props.db} 
+            setChatMessages={setChatMessages} 
+            chatMessages={chatMessages} 
+            userMatch={userMatch} 
+            user={props.user} 
+            gameMatch={gameMatch}
+            setGameMatch={setGameMatch} 
+            setScreen={setScreen}
+            chatgame={chat}/>
           break;
       case "empty":
           component = <MatchEmpty />
@@ -250,7 +266,7 @@ const Home = (props) => {
 
   return (
     <Wrapper key={"black"}>
-        <MatchList db={props.db} setChatMessages={setChatMessages} userMatch={userMatch} setUserMatch={setUserMatch} user={props.user} setUser={props.setUser} screen={screen} setScreen={setScreen}/>
+        <MatchList db={props.db} setChatMessages={setChatMessages} userMatch={userMatch} setUserMatch={setUserMatch} user={props.user} setUser={props.setUser} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen} oldScreen={oldScreen}/>
         {loadScreen(userMatch, setUserMatch, chatMessages, screen, setScreen)}
     </Wrapper>
   );

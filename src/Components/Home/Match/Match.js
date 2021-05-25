@@ -115,7 +115,7 @@ const Match = (props) => {
         if(props.nextUserMatchList.length == 0 && loaded) setLoaded(false);
 
         let timer1 = setTimeout(() => {
-          console.log(!props.nextUserMatchList[0]?.[1] + "<-- match control");
+          //console.log(!props.nextUserMatchList[0]?.[1] + "<-- match control");
           if(!props.nextUserMatchList[0]?.[1] && props.nextUserMatchList.length === 0) {
             props.setOldScreen(props.screen); props.setScreen("empty");
           } 
@@ -138,8 +138,8 @@ const Match = (props) => {
                     {/* {console.log(props.nextUserMatchList[0]?.[1])}
                     {console.log(props.userMatch)} */}
                     <Report 
-                      styles={"height:unset; width:100%;display:flex; flex-direction:column; justify-content:flex-end;align-items:flex-end; padding-right: 1vh; padding-top: 1vh;"}
-                      stylos="top:13%; justify-content:center; align-items:center; width:100%;" 
+                      styles={"padding-top:0.5vh; padding-right:0.5vw; position:absolute; top:8%; left:81%; height:unset; width:1vw; flex-direction:column; justify-content:flex-end;align-items:flex-end;"}
+                      stylos="top:13%; justify-content:center; align-items:center; width:100%;"
                       isUser={isUser} 
                       setIsUser={setIsUser} 
                       usermatch={props.nextUserMatchList[0]?.[1]} 

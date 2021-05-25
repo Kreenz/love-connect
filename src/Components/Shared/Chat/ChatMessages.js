@@ -14,7 +14,7 @@ const Wrapper = styled.div`
         width: 100%;
         height:${props.active ? "70%" : "100%"};
         background:url('${props?.background}') no-repeat center;
-        background-size: 40% 45%;
+        background-size: 15vw 15vw;
         background-color: #f5f5f5;
         text-align: center;
         align-items: center;
@@ -74,22 +74,23 @@ const ChatMessages = (props) => {
     const [resize, setResize] = useState({messageId:"", expand: false});
     let messagesEnd = "";
 
-    const loadSelectedGame = (id_game) => {
+    const loadSelectedGame = (id_game, id_gameMatch, name) => {
+        console.log(props);
+        console.log(id_game)   
         props.db
-        .collection("juegos")
-        .doc(id_game)
+        .collection("matches/" + props.userMatch.id_chat + "/juegos")
+        .doc(id_gameMatch)
         .get()
-        .then( game => {
-            
-            let res = /*JSON.parse(game.data().respuestas)*/ "";       
-            props.setGameMatch({state: game.data().state, respuestas:res})
+        .then(doc => {
+            props.setGameMatch({state: "init", name:name , game: JSON.parse(doc.data().juego), id_game: id_game, id_gameMatch:id_gameMatch})
             props.setScreen("game");
         })
     }
 
     const generateResponse = (type, message, messageId, resize, setResize) => {
         if(type === "game") {
-            loadSelectedGame(JSON.parse(message).id_game);
+            let res = JSON.parse(message);
+            loadSelectedGame(res.id_game, res.id_gameMatch, res.name);
         }
 
         if(type === "image") {

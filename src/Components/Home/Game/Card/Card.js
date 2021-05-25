@@ -7,8 +7,8 @@ const Wrapper = styled.div`
         flex-direction:row;
         justify-content: center;
         align-items:center;
-        height: 6vw;
-        width: 5vw;
+        height: 9vw;
+        width: 8vw;
         ${props?.styles}
 `}`
 
@@ -20,6 +20,8 @@ const CardContainer = styled.div`
     height: 90%;
     width: 90%;
     background:blue;
+    max-width:90%;
+    font-size:calc(2px + 2vmin);
 `
 
 const Card = (props) => {

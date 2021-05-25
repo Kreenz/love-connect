@@ -65,25 +65,36 @@ const Wrapper1 = styled.div`
 `}`;
 
 const MiniProfile = (props) => {
-    
-    const recent =  (( (new Date().getTime() / 1000) - (props.user.recent / 1000) ) <= 300);
-    //console.log(recent, new Date().getTime() / 1000 , props.user.recent / 1000 , props.user.username);
-    const loadProfile = (user, setUserMatch, setScreen, screen, setOldScreen) => {
-      if(setScreen){
+  const [userone,setUserone] = useState(props.userMatch);
+  const [point,setPoint] = useState(false);
+
+  const recent =  (( (new Date().getTime() / 1000) - (props.user.recent / 1000) ) <= 300);
+  //console.log(recent, new Date().getTime() / 1000 , props.user.recent / 1000 , props.user.username);
+  const loadProfile = (user, setUserMatch, setScreen, screen, setOldScreen, oldScreen,userMatch) => {
+    //console.log(props)
+    if(setScreen){
+      
+      if(point){
+        setScreen("match")
+        setOldScreen("profile")
+        //setUserMatch(userMatch);
+      }
+      else{
+        setScreen("profile")
+        setOldScreen(screen)
         setUserMatch(user);
-        if(setOldScreen) setOldScreen(screen);
-        setScreen("profile");
       }
     }
+  }
 
-    
-    return (
-        <Wrapper>
-          <Wrapper1 styles="display:flex; justify-content:flex-start">
-            <ImgLogo 
-              imgFondo={props.user.photos?.[0]} 
-              onClick={() => loadProfile(props.user, props.setUserMatch, props.setScreen, props.screen, props.setOldScreen)
-            }>
+  
+  return (
+      <Wrapper>
+        <Wrapper1 styles="display:flex; justify-content:flex-start">
+          <ImgLogo 
+            imgFondo={props.user.photos?.[0]} 
+            onClick={() => {loadProfile(props.user, props.setUserMatch, props.setScreen, props.screen, props.setOldScreen, props.oldScreen, userone); point ? setPoint(false): setPoint(true);}
+          }> 
 
               <PersonState active={recent}/>
               

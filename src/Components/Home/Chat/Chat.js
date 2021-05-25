@@ -57,8 +57,8 @@ const Chat = (props) => {
     }, [])
 
     return (
-        <Wrapper>      
-            <ChatContainer >
+        <Wrapper styles={props.styles}>      
+            <ChatContainer styles={props.styles1}>
                 <MiniProfile user={props.userMatch} screen={props.screen} setScreen={props.setScreen} setOldScreen={props.setOldScreen} setUserMatch={props.setUserMatch} Report={<Report setScreen={props.setScreen} usermatch={props.userMatch} active={true} user={props.user} oldScreen={props.oldScreen} db={props.db}/>}/>
                 <GameSlider 
                     db={props.db} 
@@ -71,10 +71,10 @@ const Chat = (props) => {
                     user={props.user}
                     userMatch={props.userMatch}
                     />
-                <ChatMessages db={props.db} setScreen={props.setScreen} active={showSlider} user={props.user} userMatch={props.userMatch} setChatMessages={props.setChatMessages} chatMessages={props.chatMessages} setGameMatch={props.setGameMatch}/>
+                <ChatMessages db={props.db} setScreen={props.setScreen} active={showSlider} user={props.user} userMatch={props.userMatch} setChatMessages={props.setChatMessages} chatMessages={props.chatMessages} setGameMatch={props.setGameMatch} gameMatch={props.gameMatch}/>
             </ChatContainer>
-            <ChatMessageSenderWrapper>
-                <ChatTextSender db={props.db} showSlider={showSlider} setShowSlider={setShowSlider} userId={props.user.userId} userMatch={props.userMatch} userMatchId={props.userMatch.userId}/>
+            <ChatMessageSenderWrapper styles={props.styles2}>
+                <ChatTextSender db={props.db} showSlider={showSlider} setShowSlider={setShowSlider} userId={props.user.userId} userMatch={props.userMatch} userMatchId={props.userMatch.userId} bstyle={props.bstyle}/>
             </ChatMessageSenderWrapper>
         </Wrapper>
     );
