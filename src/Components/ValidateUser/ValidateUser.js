@@ -54,7 +54,7 @@ const ValidateUser = (props) => {
         <Wrapper>
             <LogoWrapper>
                 <LogoText>
-                    Lover Connect
+                    Love Connect
                 </LogoText>
             </LogoWrapper>
             <StateMessageUpdate>{state}</StateMessageUpdate>

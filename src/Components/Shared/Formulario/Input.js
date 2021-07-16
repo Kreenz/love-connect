@@ -25,6 +25,18 @@ const ObjSelect = styled.select`
     ${props?.styles}
 `}`;
 
+const ObjArea = styled.textarea`
+  ${props=>`
+    border-radius:5px;
+    border:none;
+    width:18vw;
+    height:8vh;
+    text-align: center;
+    align-items: center;
+    font-size: calc(5px + 2vmin);
+    ${props?.styles}
+`}`;
+
 const Input = (props) => {
 
   let view = null;
@@ -43,6 +55,10 @@ const Input = (props) => {
     onChange={props.onChange} onClick={props.onClick}>
         {options}
     </ObjSelect>
+  }
+  if(props.type == "textarea"){
+    view = <ObjArea name={props.name} type={props.type} placeholder={props.placeholder} value={props.value} styles={props.styles}
+    onChange={props.onChange} onClick={props.onClick}/>
   }
 
   return (

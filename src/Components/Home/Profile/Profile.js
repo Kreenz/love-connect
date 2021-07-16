@@ -21,11 +21,10 @@ const Wrapper = styled.div`
 
 
 const Profile = (props) => {
-console.log(props);
 
   return (
     <Wrapper>
-        {!props.editable ? <ProfileMatch userMatch={props.userMatch} screen={props.screen} setScreen={props.setScreen} oldScreen={props.oldScreen} setOldScreen={props.setOldScreen} user={props.user} setUser={props.setUser}/> :<ProfileEditable user={props.user} db={props.db} setUser={props.setUser}/>}
+        {!props.editable ? <ProfileMatch db={props.db} userMatch={props.userMatch} screen={props.screen} setScreen={props.setScreen} oldScreen={props.oldScreen} setOldScreen={props.setOldScreen} user={props.user} setUser={props.setUser}/> :<ProfileEditable user={props.user} db={props.db} setUser={props.setUser}/>}
         {props.editable ? <ProfileEditableAdvancedSettings user={props.user} db={props.db} setUser={props.setUser}/> : null}
     </Wrapper>
   );

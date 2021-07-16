@@ -119,8 +119,10 @@ const GameResults = (props) => {
         let cont = 0;
         preguntas.forEach(pregunta => {
 
+            console.log(props.currentGame)
             let res1 = props.currentGame?.[props.userId]?.respuestas;
             let res2 = props.currentGame?.[props.userMatchId]?.respuestas;
+
 
             views.push(
                 <QuestionBoxWrapper background={cont % 2 == 0}>
@@ -131,11 +133,11 @@ const GameResults = (props) => {
 
                         <AnswerSectionWrapper>
                             <AnswerWrapper background={true}>
-                                <AnswerText> {res1?.[cont]}</AnswerText>
+                                <AnswerText> {res1[cont]}</AnswerText>
                             </AnswerWrapper>
 
                             <AnswerWrapper>
-                                <AnswerText> {res2?.[cont]}</AnswerText>
+                                <AnswerText> {res2[cont]}</AnswerText>
                             </AnswerWrapper>
                         </AnswerSectionWrapper>
                     </QuestionWrapper>

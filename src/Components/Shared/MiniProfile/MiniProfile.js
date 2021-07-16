@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components";
-import Report from "../../Shared/Report/Report";
-import img from  "../../../Assets/Images/Profile/ProfileQR2LzSe7dfLcyAEnuWu4/1.jpeg";
+import highPriority from "../../../Assets/Images/Icons/high_priority_icon.png";
+import lowPriority from "../../../Assets/Images/Icons/low_priority_icon.png";
                
 const Wrapper = styled.div`
   ${props=>`
@@ -23,7 +23,7 @@ const ImgLogo = styled.div`
     align-items:flex-end;
     justify-content:flex-end;
     background: url("${props.imgFondo}") no-repeat center;
-    background-size: 100% auto;
+    background-size: cover;
     background-color:lightblue;
     border-radius:0.5vw;
     background-repeat: no-repeat;
@@ -37,8 +37,8 @@ const ImgLogo = styled.div`
 
 const PersonName = styled.h3`
   font-size: 2vh;
-  margin-left: 1vw; 
   color:white;
+  margin-bottom: 1vh;
 `;
 
 const PersonState = styled.div`
@@ -64,6 +64,26 @@ const Wrapper1 = styled.div`
     ${props?.styles}
 `}`;
 
+
+const WrapperUserKarma = styled.div`
+  display:flex;
+  flex-direction: column;
+  width: 50%;
+  heigth: 100%;
+  margin-bottom: 3%;
+  text-align: initial;
+  margin-left: 5%;
+`
+
+const PersonKarma = styled.div`
+  ${props => `
+    font-size: 1.5vh;
+    color:white;
+    height:100%;
+    width:5vw;
+    background:url('${props.karma >= 50 ? highPriority : lowPriority}') no-repeat center;
+    background-size: 5vh 5vh;
+`}`
 const MiniProfile = (props) => {
   const [userone,setUserone] = useState(props.userMatch);
   const [point,setPoint] = useState(false);
@@ -87,19 +107,23 @@ const MiniProfile = (props) => {
     }
   }
 
-  
   return (
       <Wrapper>
         <Wrapper1 styles="display:flex; justify-content:flex-start">
           <ImgLogo 
             imgFondo={props.user.photos?.[0]} 
             onClick={() => {loadProfile(props.user, props.setUserMatch, props.setScreen, props.screen, props.setOldScreen, props.oldScreen, userone); point ? setPoint(false): setPoint(true);}
+          
           }> 
 
               <PersonState active={recent}/>
               
             </ImgLogo>
-            <PersonName>{props.user.username}</PersonName>
+            <WrapperUserKarma>
+              <PersonName>{props.user.username}</PersonName>
+              
+            </WrapperUserKarma>
+
           </Wrapper1>
           {
           props.Report ? 
@@ -108,7 +132,7 @@ const MiniProfile = (props) => {
             </Wrapper1>
             : null
           }
-
+          {props.karma ? <PersonKarma karma={props.karma}></PersonKarma> : null}
         </Wrapper>
     );
 };

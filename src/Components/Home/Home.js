@@ -10,8 +10,6 @@ import Chat from "./Chat/Chat";
 import Profile from "./Profile/Profile";
 import Game from "./Game/Game";
 
-import PhotoLogo from "../../Assets/Images/profileIcon.jpg";
-
 const Wrapper = styled.div`
   ${props=>`
     display:flex;
@@ -34,7 +32,6 @@ const Home = (props) => {
   const[nextUserMatchList, setNextUserMatchList] = useState([])
   const[localitzation, setLocalitzation] = useState(null);
   const[gameMatch,setGameMatch] = useState([]);
-
 
   const options = {
     enableHighAccuracy: true,
@@ -60,7 +57,8 @@ const Home = (props) => {
         upper_age_range: props.user.upper_age_range,
         lower_age_range: props.user.lower_age_range,
         description: props.user.description,
-        localitzation:{lat: pos.coords.latitude, long: pos.coords.longitude}
+        localitzation:{lat: pos.coords.latitude, long: pos.coords.longitude},
+        karma: props.user.karma
       })
       
       setLocalitzation({lat: pos.coords.latitude, long:pos.coords.longitude});
@@ -103,16 +101,12 @@ const Home = (props) => {
     props.db
     .collection("perfiles")
     .doc(props.user.userId)
-    .update(
-      {
-        reciente: recent
-      }
-    )
+    .update({
+      reciente: recent
+    })
 
     user.recent = recent;
-    props.setUser(
-      user
-    )
+    props.setUser(user)
 
   }, [screen])
 
@@ -122,14 +116,12 @@ const Home = (props) => {
 
   useEffect(() => {
     const userDb = props.user;
-    //console.log(nextUserMatchList);
     if(nextUserMatchList.length === 0 && userDb.localitzation !== null){
-      const db = props.db
-      let lookingFor = userDb.lookingFor === "no binario" ? ["chica", "chico"] : [userDb.lookingFor]; 
+      const db = props.db;
+
       db
       .collection("perfiles")
-      .where("genero", "in", lookingFor)
-      .orderBy("karma", "asc")
+      .orderBy("karma", "desc")
       .get()
       .then(snapshot => {
         snapshot.forEach(doc => {
@@ -138,11 +130,21 @@ const Home = (props) => {
           //console.log(distanceFromBetween, userDb.distance, doc.data().distance, "distancia");
           if(distanceFromBetween <= userDb.distance && distanceFromBetween <= doc.data().distancia) {
             //Filtro edad
-            //console.log(doc.data().edad <= userDb.age + userDb.upper_age_range, doc.data().edad >= userDb.age - userDb.lower_age_range, "edad")
-            if(doc.data().edad <= userDb.age + userDb.upper_age_range && doc.data().edad >= userDb.age - userDb.lower_age_range ) {
+            //console.log(userDb.upper_age_range, userDb.lower_age_range, userDb.age, doc.data().rango_edad_mayor, doc.data().rango_edad_mayor, doc.data().edad)
+            if( (doc.data().edad <= userDb.upper_age_range && doc.data().edad >= userDb.lower_age_range) && (userDb.age <= doc.data().rango_edad_mayor && userDb.age >= doc.data().rango_edad_menor) ) {
               //Filtro busca
-              //console.log((doc.data().busca === userDb.gender || doc.data().busca === "no binario") && doc.id != userDb.userId, "busca")
-              if((doc.data().busca === userDb.gender || doc.data().busca === "no binario") && doc.id != userDb.userId) {
+              let userMatchBusca = "";
+              if(doc.data().busca === "Heterosexual") userMatchBusca = (doc.data().genero === "chico" ? "chica" : "chico");
+              if(doc.data().busca === "Homosexual") userMatchBusca = (doc.data().genero === "chico" ? "chico" : "chica");
+              if(doc.data().busca === "Bisexual") userMatchBusca = "no binario";
+
+              let userBusca = "";
+              if(userDb.lookingFor === "Heterosexual") userBusca = (userDb.gender === "chico" ? "chica" : "chico");
+              if(userDb.lookingFor === "Homosexual") userBusca = (userDb.gender === "chico" ? "chico" : "chica");
+              if(userDb.lookingFor === "Bisexual") userBusca = "no binario";
+
+              //console.log(userBusca, userDb.gender, "<-- yo" ,userMatchBusca, doc.data().genero, "<-- el, busca")
+              if(((userBusca === doc.data().genero || doc.data().genero === "no binario" || userBusca === "no binario") && (userMatchBusca === userDb.gender || userDb.gender === "no binario" || userMatchBusca === "no binario")) && doc.id != userDb.userId) {
                 //console.log("Si hay perfil")
                 db
                 .collection("perfiles/" + userDb.userId + "/match_list")
@@ -191,7 +193,7 @@ const Home = (props) => {
     recent:null,
     id_chat:null,
     tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
-    photos:[PhotoLogo, "", "", ""]
+    photos:["", "", "", ""]
   })
 
 
@@ -221,7 +223,16 @@ const Home = (props) => {
           component = <Chat db={props.db} gameMatch={gameMatch} setGameMatch={setGameMatch} setChatMessages={setChatMessages} chatMessages={chatMessages} userMatch={userMatch} setUserMatch={setUserMatch} user={props.user} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen} oldScreen={oldScreen}/>
           break;
       case "profile":
-          component = <Profile db={props.db} screen={screen} setScreen={setScreen} editable={userMatch.userId === props.user.userId} user={props.user} setUser={props.setUser} oldScreen={oldScreen} setOldScreen={setOldScreen}  userMatch={userMatch}/>
+          component = <Profile 
+                        db={props.db} screen={screen} 
+                        setScreen={setScreen} 
+                        editable={userMatch.userId === props.user.userId} 
+                        user={props.user} 
+                        setUser={props.setUser} 
+                        oldScreen={oldScreen} 
+                        setOldScreen={setOldScreen}  
+                        userMatch={userMatch}
+                        setNextUserMatchList={setNextUserMatchList} />
           break;
       case "game":
           let chat = <Chat db={props.db} gameMatch={gameMatch} setGameMatch={setGameMatch} setChatMessages={setChatMessages} chatMessages={chatMessages} userMatch={userMatch} setUserMatch={setUserMatch} user={props.user} screen={screen} setScreen={setScreen} setOldScreen={setOldScreen} oldScreen={oldScreen}

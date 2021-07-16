@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import styled from "styled-components";
 
-import userMatchResponse from "../../../../Assets/Images/Icons/chat_message.png";
-import userMatchWaiting from "../../../../Assets/Images/Icons/question_box.png";
+import userMatchResponse from "../../../../../Assets/Images/Icons/chat_message.png";
+import userMatchWaiting from "../../../../../Assets/Images/Icons/question_box.png";
 
 const ImgWaiting = styled.img`
     width:3vh;
@@ -196,7 +196,7 @@ const QuestionFiller = (props) => {
         
         base.get().then((doc) => {
             let data = JSON.parse(doc.data().juego);
-            
+
             //AÑADIR VALORES AL CAMPO PREGUNTA
             game.preguntas = data.preguntas;
 

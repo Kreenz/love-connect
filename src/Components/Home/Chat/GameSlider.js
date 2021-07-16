@@ -26,7 +26,8 @@ const GameItem = styled.div`
     ${props =>`
         width:100%;
         height:85%;
-        background: url('${props.background}');
+        background: url('${props.background}') no-repeat center;
+        background-size: cover;
         background-color:lightblue;
         border-radius:7%;
         cursor:pointer;

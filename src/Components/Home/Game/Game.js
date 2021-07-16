@@ -4,6 +4,10 @@ import "firebase/firestore";
 
 import LoadingScreen from "./LoadingScreen";
 import GamePreguntados from "./GamePreguntados/GamePreguntados";
+import GameRun from "./GamesMarc/GameRun/GameRun";
+import GameConocerse from "./GamesMarc/GameConocerse/GameConocerse";
+import GameContraReloj from "./GamesMarc/GameContraReloj/GameContraReloj";
+import Game3x3 from "./GamesMarc/Game3x3/Game3x3";
 
 const Wrapper = styled.div`
     ${props=>`
@@ -12,7 +16,7 @@ const Wrapper = styled.div`
         align-items:center;
         justify-content:center;
         height:100vh;
-        width: 75vw;
+        width: 80vw;
         ${props?.styles}
 `}`
 
@@ -64,7 +68,59 @@ const Game = (props) => {
                                     userMatchId={props.userMatch.userId} 
                                     setGameMatch={props.setGameMatch}
                                     user={props.user}
-                                    userMatch={props.userMatch} />
+                                    userMatch={props.userMatch} />;
+                    break;
+                case "Adivina":
+                    components = <GameRun 
+                                    db={props.db} 
+                                    setScreen={props.setScreen} 
+                                    matchId={props.userMatch.id_chat} 
+                                    gameMatch={props.gameMatch} 
+                                    userGame={userGame} 
+                                    userId={props.user.userId} 
+                                    userMatchId={props.userMatch.userId} 
+                                    setGameMatch={props.setGameMatch}
+                                    user={props.user}
+                                    userMatch={props.userMatch} />;
+                    break;
+                case "Conocerse":
+                    components = <GameConocerse 
+                                    db={props.db} 
+                                    setScreen={props.setScreen} 
+                                    matchId={props.userMatch.id_chat} 
+                                    gameMatch={props.gameMatch} 
+                                    userGame={userGame} 
+                                    userId={props.user.userId} 
+                                    userMatchId={props.userMatch.userId} 
+                                    setGameMatch={props.setGameMatch}
+                                    user={props.user}
+                                    userMatch={props.userMatch} />;
+                    break;
+                case "ContraReloj":
+                    components = <GameContraReloj 
+                                    db={props.db} 
+                                    setScreen={props.setScreen} 
+                                    matchId={props.userMatch.id_chat} 
+                                    gameMatch={props.gameMatch} 
+                                    userGame={userGame} 
+                                    userId={props.user.userId} 
+                                    userMatchId={props.userMatch.userId} 
+                                    setGameMatch={props.setGameMatch}
+                                    user={props.user}
+                                    userMatch={props.userMatch} />;
+                    break;
+                case "3x3":
+                    components = <Game3x3
+                                    db={props.db} 
+                                    setScreen={props.setScreen} 
+                                    matchId={props.userMatch.id_chat} 
+                                    gameMatch={props.gameMatch} 
+                                    userGame={userGame} 
+                                    userId={props.user.userId} 
+                                    userMatchId={props.userMatch.userId} 
+                                    setGameMatch={props.setGameMatch}
+                                    user={props.user}
+                                    userMatch={props.userMatch} />;
                     break;
                 default:
                     components = <></>;

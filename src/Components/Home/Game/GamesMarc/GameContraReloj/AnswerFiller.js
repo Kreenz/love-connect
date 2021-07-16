@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useRef, useEffect, useState } from "react"
 import styled from "styled-components";
 
-import userMatchResponse from "../../../../Assets/Images/Icons/chat_message.png";
-import userMatchWaiting from "../../../../Assets/Images/Icons/question_box.png";
+import userMatchResponse from "../../../../../Assets/Images/Icons/chat_message.png";
+import userMatchWaiting from "../../../../../Assets/Images/Icons/question_box.png";
 
 const Wrapper = styled.div`
     ${props=>`
@@ -24,7 +24,7 @@ const QuestionWrapper = styled.div`
     align-items:center;
     justify-content:space-around;
     width: 90%;
-    height: 50vh;
+    height: 60vh;
     background-color:#f5f5f5;
     border-radius:0.5vh;
     box-shadow:0 0 0.3vh black;
@@ -116,10 +116,28 @@ const AnswerFiller = (props) => {
     console.log(props.currentGame[props.userId].respuestas[props.currentGame.index]);
     const currentGame = props.currentGame;
     const waitingFor = "Esperando al otro jugador...";
-    const headerText = (props.state === "init") ? "Pregunta " + (currentGame.index + 1) + "/" + currentGame.preguntas.length : waitingFor ;
+    const headerText = (props.state === "init") ? "Palabra " + (currentGame.index + 1) + "/" + currentGame.preguntas.length : waitingFor ;
     const headerQuestionText = (props.state === "init") ? currentGame.preguntas?.[currentGame.index] : waitingFor;
     const buttonText = (props.state === "init") ? "Enviar respuesta" : waitingFor;
-    //console.log(props.currentGame)
+    const numDecrease = () => props.setCont((e) => e - 1);
+
+    useEffect(() => {
+
+        let intervalRef;
+        if(headerText != waitingFor){
+            intervalRef = setInterval(numDecrease, 1000);
+        }
+        else{
+            clearInterval(intervalRef)
+        }
+        
+        if(props.cont <= 0){
+            clearInterval(intervalRef);
+            sendAnswer();
+        }
+        
+        return () => clearInterval(intervalRef);
+      });
     
     
     const sendAnswer = () => {
@@ -164,6 +182,7 @@ const AnswerFiller = (props) => {
                             {headerText} 
                             <ImgResponse src={props.currentGame[props.userMatchId]?.estado === "ready" ? userMatchResponse : userMatchWaiting } alt="userMatch respose" />
                         </QuestionTitle>
+                        <QuestionTitle>{props.cont}</QuestionTitle>
                         <QuestionTitle styles={"background-color:white;min-width:30vw;min-height:6vh;color:black"}> {headerQuestionText} </QuestionTitle>
                     </QuestionHeader>
                 </SectionWrapper>

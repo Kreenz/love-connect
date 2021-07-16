@@ -99,7 +99,7 @@ const MatchProfileImg = styled.div`
         border-radius:2vh;
         background: url(${props.userImage}) no-repeat center;
         background-color: lightblue;
-        background-size: 100% auto;
+        background-size: cover;
         box-shadow:0 0 0.3vh black;
         ${props?.styles}
 `}`;

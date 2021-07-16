@@ -6,19 +6,11 @@ import "firebase/firestore";
 import './App.css';
 import Home from './Components/Home/Home';
 import ValidateUser from './Components/ValidateUser/ValidateUser';
-import PhotoLogo from "./Assets/Images/profileIcon.jpg";
+import apiKey from "./Config";
+console.log(apiKey);
 
-var firebaseConfig = {
-  apiKey: "AIzaSyC42VNzf1WChOi8Z9odO-XBBG1TpldmsZY",
-  authDomain: "loveconnect-8fb23.firebaseapp.com",
-  projectId: "loveconnect-8fb23",
-  storageBucket: "loveconnect-8fb23.appspot.com",
-  messagingSenderId: "332872202017",
-  appId: "1:332872202017:web:aaef6bf3ae0f6bb8273060",
-  measurementId: "G-2DJQKDVC4V"
-};
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(apiKey);
 firebase.analytics();
 firebase.database();
 const db = firebase.firestore();
@@ -40,7 +32,7 @@ function App() {
     gender:"chico",
     lookingFor: "",
     tastes:[{name: "Pirola", description: "magic pirola"},{name: "Caca", description: "magic pirola"},{name: "Agua de bater", description: "magic pirola"}],
-    photos:[PhotoLogo],
+    photos:[""],
     localitzation:null,
     upper_age_range:2,
     lower_age_range:2,

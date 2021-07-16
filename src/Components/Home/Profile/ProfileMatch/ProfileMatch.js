@@ -26,7 +26,7 @@ const PhotoWrapper = styled.div`
   ${props=>`
     display:flex;
     flex-direction: column;
-    align-items:end;
+    align-items:flex-end;
     justify-content: space-between;
     width:100%;
     height:${props.expand? "70%" : "35%"};
@@ -40,8 +40,8 @@ const PhotoWrapper = styled.div`
 const PhotoContentWrapper = styled.div`
   display:flex;
   flex-direction: row;
-  padding-top:1vh;
-  padding-right:1vh;
+  padding-top:0.5vh;
+  padding-right:0.5vh;
 `
 
 const ButtonImgExpander = styled.div`
@@ -83,7 +83,7 @@ const ProfileMatch = (props) => {
           <PhotoWrapper expand={expand} photo={props.userMatch.photos[imgIndex]} >
             <PhotoContentWrapper>
               <Report setScreen={props.setScreen} oldScreen={props.oldScreen} usermatch={props.userMatch} user={props.user} db={props.db}
-              styles="padding-top:0.5vh; padding-right:0.5vw; position:absolute; top:3%; left:80%; height:unset; width:1vw;"/>
+              styles="margin-right:1vh;margin-top:1vh;"/>
             </PhotoContentWrapper>
             <PhotoContentWrapper>
               <ImageSlider userPhotos={props.userMatch.photos} setImgIndex={setImgIndex} imgIndex={imgIndex}/>

@@ -10,6 +10,7 @@ const Wrapper = styled.div`
         flex-direction:column;
         align-items:flex-start;
         width: 100%;
+        height: 100%;
         background:transparent;
         ${props?.styles}
 `}`
@@ -39,7 +40,14 @@ const GamePreguntados = (props) => {
         switch (props.userGame.fase) {
             case "preguntas":
 
-                components = <QuestionFiller  matchId={props.matchId} gameId={props.gameMatch.id_gameMatch} db={props.db} state={props.userGame?.[userId].estado} userId={userId} userMatchId={userMatchId} />
+                components = <QuestionFiller 
+                                game={props.gameMatch.game}
+                                matchId={props.matchId} 
+                                gameId={props.gameMatch.id_gameMatch} 
+                                db={props.db} 
+                                state={props.userGame?.[userId].estado} 
+                                userId={userId} 
+                                userMatchId={userMatchId} />
                 
                 break;
             case "respuestas":

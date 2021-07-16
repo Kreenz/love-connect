@@ -88,8 +88,10 @@ const DivConten = styled.div`
 
 const Title = styled.h1`
     width: 100%;
-    height: 20%;
+    height: 10%;
     color:#14557b;
+    margin-bottom:0px;
+    margin-top:0px;
 `;
 
 const DivRow = styled.div`
@@ -140,6 +142,7 @@ const Report = (props) => {
     const [modalForm,setModal] = useState(false);
     const [matchoff,setMatch] = useState(false);
     const [prop,setProp] = useState(false);
+    const [lookingFor, setLookingFor] = useState("Leve");
 
     const FuncUser = () => {
         props.setIsUser(!props.isUser)
@@ -154,12 +157,15 @@ const Report = (props) => {
                         name="form1"
                         inputs={
                             [{
-                                label:"Descripción del reporte: ",
-                                name:"descripcion",
-                                type:"text",
-                                styles:"width:100%; height:100%"
-                            }
-                        ]
+                                label:"Reporte: ",
+                                name:"busca",
+                                type:"select",
+                                options:["Leve", "Grave", "Muy grave"],
+                                typegen:lookingFor,
+                                onChange:(e) => setLookingFor(e.target.value),
+                                styl:"color:black; width:20vw;",
+                                styles:"width:100%; font-size:2.2vh;outline:none;"
+                            }]
                         }
                         styles="width:95%; height:20vh;"
                     />
@@ -172,13 +178,32 @@ const Report = (props) => {
                                     label:"Reportar",
                                     name:"submit",
                                     type:"submit",
+                                    style2:"margin-bottom:0px;",
                                     fun: () => {
                                         const response = props.db.collection("perfiles");
                                         response.get().then(snapshot => {
                                             snapshot.forEach((doc) => {
                                                 if(doc.data().correo == props.usermatch.email){
-                                                    let karma = {
-                                                        karma:doc.data().karma-1
+                                                    let karma;
+                                                    if(lookingFor == "Leve"){
+                                                        karma = {
+                                                            karma:doc.data().karma-5
+                                                        }
+                                                    }
+                                                    else if(lookingFor == "Grave"){
+                                                        karma = {
+                                                            karma:doc.data().karma-10
+                                                        }
+                                                    }
+                                                    else if(lookingFor == "Muy grave"){
+                                                        karma = {
+                                                            karma:doc.data().karma-15
+                                                        }
+                                                    }
+                                                    else{
+                                                        karma = {
+                                                            karma:doc.data().karma-5
+                                                        }
                                                     }
                                                     props.db.collection("perfiles").doc(props.usermatch.userId).update(karma);
                                                 }
@@ -199,6 +224,7 @@ const Report = (props) => {
                                     label:"Cerrar",
                                     name:"close",
                                     type:"submit",
+                                    style2:"margin-bottom:0px;",
                                     fun: () => {
                                         setModal(!modalForm);;
                                     }
@@ -295,7 +321,7 @@ const Report = (props) => {
                         </HoverWrapper>
                     </PopUp>
                 </ColWrapper>
-                <ColWrapper styles={"margin-rigth:3%;"}>
+                <ColWrapper>
                     <Reports/>
                     <Reports/>
                     <Reports/>

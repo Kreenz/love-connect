@@ -48,7 +48,7 @@ const Message = styled.span`
         font-size:1.5vh;
         ${(props.messageUserId === props.userId) ? "margin-right:1%" : "margin-left:1%"};
         ${(props.type === "image") ? "background:url("+ props.message +") no-repeat center; background-size: 100% auto;width: 10vw; height: 10vw; cursor: pointer;" : ""};
-        ${(props.type === "game") ? "width: 94%; height: 10vh; align-items:center; background-color #20bf55; background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%); justify-content:center; cursor: pointer; border:none; color:white; font-size: 2.2vh; " : ""};
+        ${(props.type === "game") ? "width: 94%; height: 8vh; align-items:center; background-color #20bf55; background-image linear-gradient(315deg, #20bf55 0%, #01baef 74%); justify-content:center; cursor: pointer; border:none; color:white; font-size: 1.8vh; " : ""};
         ${(props.resize.expand && props.resize.messageId === props.messageId) ? "max-width:100%; padding:0; margin:0; width: 100%; height: 100%; position:absolute; top:0; left:0; background-size: auto; background-color:rgba(0,0,0,0.5)" : " "};
 `}`
 
@@ -71,6 +71,10 @@ const MessageEnd = styled.div`
     min-height:0.5vh;
 `
 
+const GameTextWrapper = styled.span`
+    font-weight:bold;
+`
+
 const ChatMessages = (props) => {
     const [resize, setResize] = useState({messageId:"", expand: false});
     let messagesEnd = "";
@@ -84,6 +88,7 @@ const ChatMessages = (props) => {
         .get()
         .then(doc => {
             props.setGameMatch({state: "init", name:name , game: JSON.parse(doc.data().juego), id_game: id_game, id_gameMatch:id_gameMatch})
+            props.setScreen("chat");
             props.setScreen("game");
         })
     }
@@ -139,10 +144,12 @@ const ChatMessages = (props) => {
                             userId={props.user.userId}
                             onClick={() => { generateResponse(message.type, message.message, message.id, resize, setResize) }}
                         >
-                            {(message.type === "text") ? message.message : ""}
-                            {(message.type === "game") ? "INVITACION A JUGAR A" : null}
-                            {(message.type === "game") ? <GameNameWrapper> {JSON.parse(message.message).name} </GameNameWrapper> : null}
-                            {(message.type === "game") ? <PlayMessage src={playIcon} alt={"game message"} /> : null}
+
+                        {(message.type === "game") ? <GameTextWrapper>INVITACION A JUGAR A</GameTextWrapper> : null}
+                        {(message.type === "game") ? <GameNameWrapper> {JSON.parse(message.message).name} </GameNameWrapper> : null}
+                        {(message.type === "game") ? <PlayMessage src={playIcon} alt={"game message"} /> : null}
+                        {(message.type === "text") ? message.message : ""}
+
                         </Message>
                         
                     </MessageWrapper>

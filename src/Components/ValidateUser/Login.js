@@ -108,7 +108,8 @@ const Login = (props) => {
                             localitzation:null,
                             upper_age_range:doc.data().rango_edad_mayor,
                             lower_age_range:doc.data().rango_edad_menor,
-                            description: doc.data().descripcion
+                            description: doc.data().descripcion,
+                            karma: doc.data().karma
                           }
                           
                           localStorage.setItem("token", JSON.stringify(user));

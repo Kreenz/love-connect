@@ -76,6 +76,26 @@ const MatchList = (props) => {
         props.setUser({loggedIn: false});
     }
 
+    const loadUsers = () => {
+        let components = [];
+        userMatchList.forEach(userMatch => {
+            components.push(
+                <MatchPerson 
+                db={props.db}
+                userId={props.user.userId} 
+                userMatchId={userMatch.id_perfil}
+                userMatch={props.userMatch}
+                setUserMatch={props.setUserMatch}
+                setScreen={props.setScreen}
+                searchText={searchText}
+                setChatMessages={props.setChatMessages}
+                screen={props.screen}
+            />)
+        })
+
+        return components
+    }
+
     //console.log(process.cwd())
     // C:\Project
     //console.log(document.location.pathname)
@@ -86,12 +106,18 @@ const MatchList = (props) => {
                 .collection("perfiles/" + userId + "/match_list")
                 .where("match", "==", true)
                 .onSnapshot((snapshot => {
-                    const data = snapshot.docs.map((doc) => ({
-                        ...doc.data(),
-                        id:doc.id
-                    }))
+                    let views = [];
+                    snapshot.forEach(doc => {
+                        views.push({
+                            id:doc.id,
+                            id_chat:doc.data().id_chat,
+                            id_perfil:doc.data().id_perfil,
+                            like:doc.data().like,
+                            match:doc.data().match
+                        })
+                    })
 
-                    setUserMatchList(data);
+                    setUserMatchList(views);
             }))
 
             return unsubscribe;
@@ -100,26 +126,11 @@ const MatchList = (props) => {
     //console.log(props.userMatch)
     return (
         <Wrapper>
-            <MiniProfile user={props.user} userMatch={props.userMatch} setScreen={props.setScreen} setUserMatch={props.setUserMatch} screen={props.screen} setOldScreen={props.setOldScreen} oldScreen={props.oldScreen} db={props.db}/>
+            <MiniProfile  karma={props.user.karma} user={props.user} userMatch={props.userMatch} setScreen={props.setScreen} setUserMatch={props.setUserMatch} screen={props.screen} setOldScreen={props.setOldScreen} oldScreen={props.oldScreen} db={props.db}/>
             <MatchSearcher setSearchText={setSearchText}/>
             <SubMenuWrapper>
                 <WrapperMatches>
-                { 
-                userMatchList && userMatchList.map(userMatch =>{
-                    return(
-                        <MatchPerson 
-                            db={props.db}
-                            userId={props.user.userId} 
-                            userMatchId={userMatch.id_perfil}
-                            userMatch={props.userMatch}
-                            setUserMatch={props.setUserMatch}
-                            setScreen={props.setScreen}
-                            searchText={searchText}
-                            setChatMessages={props.setChatMessages}
-                            screen={props.screen}
-                        />   
-                    )
-                }) }
+                { loadUsers() }
                     {/*loadMatches(userMatchList, props.userMatch, props.setUserMatch, props.screen, props.setScreen, props.setChatMessages)*/}
                 </WrapperMatches>
                 <HoverWrapper>

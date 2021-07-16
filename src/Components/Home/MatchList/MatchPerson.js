@@ -111,7 +111,7 @@ const MatchPerson = (props) =>{
                 })
             });
 
-    }, [])
+    }, [props.userMatchId])
 
     return(
         <WrapperPerson active={userMatch.username?.toLowerCase().includes(props.searchText.toLowerCase())} onClick={() => { 

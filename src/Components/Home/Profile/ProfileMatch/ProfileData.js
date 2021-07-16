@@ -101,7 +101,11 @@ const ProfileData = (props) => {
                 </InputWrapper>
 
                 <InputWrapper styles={"background-color:transparent; background-image:none; border:none"}>
-                    <InputWrapper styles={"width:20%;justify-content:space-between;margin-top:0;"}>
+                    <InputWrapper styles={"width:25%;justify-content:space-between;margin-top:0;"}>
+                        Genero
+                        <InputData styles={"width:100%;"} value={props.userMatch.gender} readOnly={true}/>
+                    </InputWrapper>
+                    <InputWrapper styles={"width:20%;justify-content:space-between;margin-left:1vh;margin-top:0;"}>
                         Distancia
                         <InputData value={props.userMatch.distance} readOnly={true}/>
                     </InputWrapper>
@@ -125,7 +129,6 @@ const ProfileData = (props) => {
                 </TasteDivisor>
 
                 <InputWrapper styles={"background-color:transparent; background-image:none; border:none"}>
-                    {console.log(props.userMatch),console.log("---aw----")}
                     {loadTastes(props.userMatch.tastes)}
                 </InputWrapper>
             </WrapperOverflow>

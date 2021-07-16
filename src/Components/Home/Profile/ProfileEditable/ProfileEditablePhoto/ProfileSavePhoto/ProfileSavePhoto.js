@@ -1,11 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import firebase from "firebase";
 import "firebase/firestore";
 import "firebase/storage";
 import styled from "styled-components";
 
+import addPhoto from "../../../../../../Assets/Images/Icons/addPhoto_icon.png";
+
 const Wrapper = styled.input`
-    background: url(https://firebasestorage.googleapis.com/v0/b/loveconnect-8fb23.appspot.com/o/Photos%2Fsimbolo.png?alt=media&token=7302f35c-d8b4-459f-a01f-bc218fc31d85) no-repeat center;
+    color:red;
+    width:100%;
+    height:100%;
+    align-items: center;
+    display: flex;
+    justify-content:center;
+    align-self: center;
+    opacity:0;
+    cursor:pointer;
+`;
+
+const WrapperIMG = styled.image`
+    background: url(${addPhoto}) no-repeat center;
+    background-size: 6vh auto;
     color:red;
     width:100%;
     height:100%;
@@ -16,6 +31,7 @@ const Wrapper = styled.input`
 `;
 
 
+
 const ModalEmpresa = (props) => {
     console.log(props)
     const [Imagen, setImagen] = useState();
@@ -23,9 +39,18 @@ const ModalEmpresa = (props) => {
     //OBTENIENDO LA IMAGEN
     const changeImagen = e => {
         setImagen(e.target.files[0]);
+        console.log(Imagen)
         let storageRef = firebase.storage().ref(props.user.userId);
-        uploadImage();
+
+        
     }
+
+    useEffect(() => {
+        if(Imagen != undefined){
+            uploadImage();
+            setImagen();
+        }
+    });
 
     //FUNCION PARA GUARDAR LA IMAGEN EN FIREBASE
     const uploadImage = async () => {
@@ -62,7 +87,8 @@ const ModalEmpresa = (props) => {
                     upper_age_range: props.user.upper_age_range,
                     lower_age_range: props.user.lower_age_range,
                     description: props.user.description,
-                    localitzation:{lat: props.user.localitzation.latitude, long: props.user.localitzation.longitude}
+                    localitzation:{lat: props.user.localitzation.latitude, long: props.user.localitzation.longitude},
+                    karma: props.user.karma
                 })
 
                 localStorage.setItem("token", JSON.stringify(props.user));
@@ -74,13 +100,10 @@ const ModalEmpresa = (props) => {
 
 
     return (
-        <aside id="modal" className="modal">
-            <div className="content-modal">
-                <header>
-                    <Wrapper type="file" name="imagen" onChange={changeImagen} />
-                </header>
-            </div>
-        </aside>
+        <WrapperIMG>
+            <Wrapper type="file" name="imagen" onChange={changeImagen} />
+        </WrapperIMG>
+        
     )
 }
 export default ModalEmpresa;

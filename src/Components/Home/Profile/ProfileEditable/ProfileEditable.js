@@ -7,11 +7,7 @@ import ProfileEditablePhotoButton from "./ProfileEditableButtons/ProfileEditable
 
 import Input from '../../../Shared/Formulario/Input';
 
-//npm install nouislider-react
-
-/* const Slider = () => (
-    <Nouislider step={10} range={{ min: 0, max: 100 }} start={[20]} connect />
-); */
+import Delete from '../../../../Assets/Images/Icons/delete_sign.png';
 
 const Wrapper = styled.div`
     background-color: #14557b;
@@ -22,6 +18,8 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin-left:15.6vw;
+    min-height: 100%;
+    overflow-y: auto;
 `;
 
 const WrapperPhotos = styled.div`
@@ -43,7 +41,8 @@ const WrapperPhotosElements = styled.div`
 `
 
 const WrapperPhotosEdit = styled.div`
-    background-color: lightblue;
+    background-color: #20bf55;
+    background-image: linear-gradient(315deg,#20bf55 0%,#01baef 74%);
     border-radius:0.5vh;
     display: flex;
     flex-direction: row;
@@ -54,6 +53,16 @@ const WrapperPhotosEdit = styled.div`
     margin-left: 1vw;
     justify-content: center;
     margin-right: 1vw;
+    transition: 0.5s box-shadow ease-in-out;
+`;
+
+const HoverPhotos = styled.div`
+    width:fit-content;
+    height:fit-content;
+    &:hover ${WrapperPhotosEdit} {
+        box-shadow 0 0 2vh #01baef;
+        text-shadow: 0 0 0.3vh white;
+    }
 `;
 
 const WrapperForm1 = styled.div`
@@ -73,7 +82,6 @@ const WrapperForm2_2 = styled.div`
     align-items:center;
 `;
 
-
 const WrapperTastes = styled.div`
     height: 17vh;
     min-height: 17vh;
@@ -87,17 +95,31 @@ const WrapperTastes = styled.div`
 `;
 
 const WrapperTastesEdit = styled.button`
-    height: 15%;
-    width: 30%;
-    background: red;
-    margin-left: 1vw;
+    height: 100%;
+    width: 100%;
+    opacity:0;
+    margin-left: 0.3vw;
     margin-right: 0.3vw;
     outline: none;
     border: none;
-    border-radius: 1vh;
+    border-radius: 2vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    cursor:pointer;
+    outline:none;
+`;
+
+const Icon = styled.image`
+    height: 100%;
+    width: 100%;
+    background: url(/static/media/delete_sign.c8575d6f.png) no-repeat center;
+    background-size:60%;
+    outline: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items:center;
 `;
 
 const WrapperDIVTastes = styled.div`
@@ -131,11 +153,11 @@ const TastesTitle = styled.span`
     margin-bottom:2vh;
 `;
 
-
 const ProfileEditable = (props) => {
     const [username, setUsername] = useState(props.user.username);
     const [description, setDescription] = useState(props.user.description);
     const [lookingFor, setLookingFor] = useState(props.user.lookingFor);
+    const [gender, setGender] = useState(props.user.gender);
     const [distance, setDistance] = useState(props.user.distance);
     const [upper_age_range, setUpper_age_range] = useState(props.user.upper_age_range);
     const [lower_age_range, setLower_age_range] = useState(props.user.lower_age_range);
@@ -149,7 +171,7 @@ const ProfileEditable = (props) => {
         distance:11,
         recent:null,
         gender:"chico",
-        lookingFor:"chico",
+        lookingFor:"Heterosexual",
         tastes:[
             {
                 name: "poco",
@@ -175,13 +197,14 @@ const ProfileEditable = (props) => {
             age:props.user.age,
             distance:distance,
             recent:props.user.recent,
-            gender:props.user.gender,
+            gender:gender,
             lookingFor:lookingFor,
             localitzation:props.user.localitzation,
             tastes:tastes,
             photos:props.user.photos,
             upper_age_range:upper_age_range,
-            lower_age_range:lower_age_range
+            lower_age_range:lower_age_range,
+            karma: props.user.karma
         }
         props.setUser(currentUser);
     }
@@ -196,10 +219,11 @@ const ProfileEditable = (props) => {
 
     /* console.log(props); */
     const loadPhotos = (props) => {
+        console.log(props)
         let components = [];
         for(let i = 0; i < props.user.photos.length; i++){
             components.push(
-                <ProfileEditablePhoto user={props.user.photos[i]}/>           
+                <ProfileEditablePhoto db={props.db} user={props.user.photos[i]} userId={props.user.userId} setUser={props.setUser} userFinal={props.user}/>           
             )
         }
 
@@ -223,6 +247,7 @@ const ProfileEditable = (props) => {
                         align-items: center;
                         font-size: 2vh;
                         color: black;
+                        outline:none;
                     "
                     onChange={(e) => {
                         let newTaste = [];
@@ -237,17 +262,19 @@ const ProfileEditable = (props) => {
                         })
                         setTastes(newTaste)
                     }}/>
-                    <WrapperTastesEdit name={taste} 
-                    onClick={(e) => {
-                        let newTaste = [];
-                        tastes.forEach(tast => {
-                            if(tast != e.target.name){
-                                newTaste.push(tast);
-                            }
-                        })
-                        setTastes(newTaste);
-                        SaveJS();
-                    }}/>
+                    <Icon src={Delete}>
+                        <WrapperTastesEdit name={taste} 
+                        onClick={(e) => {
+                            let newTaste = [];
+                            tastes.forEach(tast => {
+                                if(tast != e.target.name){
+                                    newTaste.push(tast);
+                                }
+                            })
+                            setTastes(newTaste);
+                            SaveJS();
+                        }}/>
+                    </Icon>
                 </WrapperDIVTastes>
             )
         });
@@ -260,6 +287,7 @@ const ProfileEditable = (props) => {
             nombre:username,
             descripcion:description,
             busca:lookingFor,
+            genero:gender,
             distancia:distance,
             rango_edad_mayor:upper_age_range,
             rango_edad_menor:lower_age_range,
@@ -276,6 +304,7 @@ const ProfileEditable = (props) => {
             console.log(props.user.uid)
         } */
         document.getElementsByName("busca")[0].value = lookingFor;
+        document.getElementsByName("gen")[0].value = gender;
         let currentUser = {
             userId: props.user.userId,
             username: username,
@@ -284,7 +313,7 @@ const ProfileEditable = (props) => {
             age:props.user.age,
             distance:distance,
             recent:props.user.recent,
-            gender:props.user.gender,
+            gender:gender,
             lookingFor:lookingFor,
             tastes:props.user.tastes,
             photos:props.photos,
@@ -297,12 +326,16 @@ const ProfileEditable = (props) => {
     return (
         <Wrapper>
             <WrapperPhotos>
+                
                 <WrapperPhotosElements>
                     {loadPhotos(props)}
                 </WrapperPhotosElements>
-                <WrapperPhotosEdit>
-                    <ProfileEditablePhotoButton user={props.user} db={props.db} setUser={props.setUser}/>
-                </WrapperPhotosEdit>
+                <HoverPhotos>
+                    <WrapperPhotosEdit>
+                        <ProfileEditablePhotoButton user={props.user} db={props.db} setUser={props.setUser}/>
+                    </WrapperPhotosEdit>
+                </HoverPhotos>
+
             </WrapperPhotos>
             {/* <Input onChange={(e) => setTextChange(e.target.value)} type="text" label="Nombre: " name="nombre" value={textChange} styles="
                 align-self: center;
@@ -319,7 +352,7 @@ const ProfileEditable = (props) => {
                             type:"text",
                             value:username,
                             onChange:(e) => setUsername(e.target.value),
-                            styles:"width:100%;font-size:2.2vh;"
+                            styles:"width:100%;font-size:2.2vh;outline:none;"
                         },
                         {
                             label:"Descripción: ",
@@ -327,7 +360,7 @@ const ProfileEditable = (props) => {
                             type:"text",
                             value:description,
                             onChange:(e) => setDescription(e.target.value),
-                            styles:"width:100%;font-size:2.2vh;"
+                            styles:"width:100%;font-size:2.2vh;outline:none;"
                         }]
                     }
                     styles="width:35vw;"
@@ -339,16 +372,27 @@ const ProfileEditable = (props) => {
                     name="form1"
                     inputs={
                         [{
-                            label:"Busca: ",
+                            label:"Orientación Sexual: ",
                             name:"busca",
                             type:"select",
-                            options:["chico", "chica", "no binario"],
+                            options:["Heterosexual", "Homosexual", "Bisexual"],
                             typegen:lookingFor,
                             onChange:(e) => setLookingFor(e.target.value),
-                            styles:"width:100%; font-size:2.2vh;"
-                        }]
+                            styles:"width:100%; font-size:2.2vh;outline:none;"
+                        },
+                        {
+                            label:"Genero: ",
+                            name:"gen",
+                            type:"select",
+                            options:["chico", "chica", "no binario"],
+                            typegen:gender,
+                            onChange:(e) => {setGender(e.target.value);console.log(e.target.value)},
+                            styles:"width:100%; font-size:2.2vh;outline:none;"
+                        }
+                    ]
                     }
                     styles={"width:10vw; height:10vh;align-items:center;"}
+                    setNextUserMatchList={props.setNextUserMatchList}
                     /* submit={funtion} */
                 />
                 <WrapperForm2_2>
@@ -364,14 +408,14 @@ const ProfileEditable = (props) => {
                                 type:"range",
                                 value:distance,
                                 range:{min:0,max:100},
-                                step:10,
+                                step:1,
                                 start:[props.user.distance],
                                 onChange:() => {
                                     let pe = document.getElementsByClassName("noUi-handle")[0];
                                     /* console.log(parseInt(pe.getAttribute("aria-valuetext"))) */
                                     setDistance(parseInt(pe.getAttribute("aria-valuetext")));
                                 },
-                                styles:"width:6vw; align-items:center;"
+                                styles:"width:6vw; align-items:center;outline:none;"
                             }]
                         }
                     />
@@ -383,7 +427,7 @@ const ProfileEditable = (props) => {
                                 name:"age",
                                 type:"range",
                                 value:lower_age_range+" - "+upper_age_range,
-                                range:{min:18,max:50},
+                                range:{min:18,max:100},
                                 step:1,
                                 start:[profileUser.lower_age_range,profileUser.upper_age_range],
                                 onChange:() => {
@@ -394,7 +438,7 @@ const ProfileEditable = (props) => {
                                     /* console.log(parseInt(pe.getAttribute("aria-valuetext"))) */
                                     setUpper_age_range(parseInt(pe2.getAttribute("aria-valuetext")));
                                 },
-                                styles:"width:6vw; align-items:center;font-size:2.2vh;"
+                                styles:"width:6vw; align-items:center;font-size:2.2vh;outline:none;"
                             }]
                         }
                     />
@@ -412,10 +456,10 @@ const ProfileEditable = (props) => {
                             Save();
                             SaveJS();
                         },
-                        styles:"width:20%;font-size:2.2vh;"
+                        styles:"width:20%;font-size:2.2vh;outline:none;"
                     }]
                 }
-                styles="height:10%; align-items:center;"
+                styles="height:10%; align-items:center; margin-top:5vh;"
             />
 
             <TastesSectionWrapper>
@@ -441,6 +485,7 @@ const ProfileEditable = (props) => {
                         transition: box-shadow 0.2s ease-in;
                         color: white;
                         margin-left:2vh;
+                        outline:none;
                     "
                     onClick={() => {add();SaveJS();}}/>
                 </WrapperTastes>
