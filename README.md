@@ -6,6 +6,6 @@ Proyecto creado con ReactJS
 
 ## Hecho por:
 
-Oriol Fornós
-Pablo Ceballos
-Marc Ortiz
+- Oriol Fornós
+- Pablo Ceballos
+- Marc Ortiz
